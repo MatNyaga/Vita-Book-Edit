@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<book>
+  <!-- 書籍名（必須） -->
+  <title>CUSTOM BOOK TITLE</title>
+  <!-- シリーズ名（必須） -->
+  <seriesName sortable="SERIES NAME FOR SORTING">SERIES NAME </seriesName>
+  <!-- シリーズ内の本書籍の番号（1から始まる序数）（必須） -->
+  <seriesOrdinal>1</seriesOrdinal>
+  <!-- 著者名（1名以上） -->
+  <authors>
+    <author sortable="AUTHOR FOR SORTING">AUTHOR</author>
+  </authors>
+  <!-- 発行者名（必須） -->
+  <publisher sortable="PUBLISHER FOR SORTING">PUBLISHER</publisher>
+  <!-- 概要 -->
+  <description><![CDATA[DESCRIPTION HERE]]></description>
+  <!-- 関連リンク（0から5個） -->
+  <links>
+    <link target="https://www.google.com/">MORE INFO LINK NAME</link>
+    <note>NOTE FOR LINKS</note>
+  </links>
+</book>
+
