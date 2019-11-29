@@ -93,6 +93,7 @@ namespace Vita_Book_Edit
             SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
 
             MessageBox.Show("Book Added");
+            this.Close();
         }
 
         private void CoverpictureBox_Click(object sender, EventArgs e)
