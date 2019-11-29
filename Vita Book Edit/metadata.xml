@@ -3,7 +3,7 @@
   <!-- 書籍名（必須） -->
   <title>CUSTOM BOOK TITLE</title>
   <!-- シリーズ名（必須） -->
-  <seriesName sortable="SERIES NAME FOR SORTING">SERIES NAME </seriesName>
+  <seriesName sortable="SERIES NAME FOR SORTING">SERIES NAME</seriesName>
   <!-- シリーズ内の本書籍の番号（1から始まる序数）（必須） -->
   <seriesOrdinal>1</seriesOrdinal>
   <!-- 著者名（1名以上） -->

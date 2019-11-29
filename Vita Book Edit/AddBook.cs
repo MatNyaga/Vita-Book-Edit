@@ -72,10 +72,12 @@ namespace Vita_Book_Edit
         private void button1_Click(object sender, EventArgs e)
         {
             
+            //TODO:Add seriesordinal
             //Save the Metadata File
             string str = File.ReadAllText("metadata.xml");
-            str = str.Replace("SERIES NAME FOR SORTING", BookTitleText.Text);
-            str = str.Replace("SERIES NAME", BookTitleText.Text);
+            str = str.Replace("CUSTOM BOOK TITLE", BookTitleText.Text);
+            str = str.Replace("SERIES NAME FOR SORTING", SeriesNameText.Text);
+            str = str.Replace("SERIES NAME", SeriesNameText.Text);
             str = str.Replace("AUTHOR FOR SORTING", AuthorText.Text);
             str = str.Replace("AUTHOR", AuthorText.Text);
             str = str.Replace("PUBLISHER FOR SORTING", PublisherText.Text);
@@ -141,7 +143,7 @@ namespace Vita_Book_Edit
                 openFileDialog1.ShowDialog();
                 filename = openFileDialog1.FileName;
                 Image img = Image.FromFile(filename);
-                img = resizeImage(img, new Size(177, 250));
+                img = resizeImage(img, new Size(30, 300));
                 SpinepictureBox.Image = img;
                 filename = null;
             }
