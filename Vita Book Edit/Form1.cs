@@ -20,6 +20,13 @@ namespace Vita_Book_Edit
         int BookNumber = 0;
         int Bookindex = 2;
         Boolean NewBook = false;
+        //XML Stream Data
+        Serializer ser = new Serializer();
+        string path = string.Empty;
+        string xmlInputData = string.Empty;
+        string xmlOutputData = string.Empty;
+        List<book> allbooks = new List<book>();
+
         private Button btnAdd = new Button();
 
         //Universal library format function
@@ -44,7 +51,25 @@ namespace Vita_Book_Edit
             var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
             foreach (var d in directories)
             {
-                if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0) { BookNumber += 1; }
+                if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0) { BookNumber += 1;
+                    xmlInputData = File.ReadAllText(d.FullName + "\\"+"metadata.xml");
+                    book mybook = ser.Deserialize<book>(xmlInputData);
+                    Button btn = new Button();
+                    btn.Text = mybook.title;
+                    btn.Size = new System.Drawing.Size(177, 250);
+                    btn.ForeColor = Color.BlueViolet;
+                    try {
+                        btn.Image = Image.FromFile(d.FullName + "\\" + "cover.jpg");
+                        btn.Image = ResizeImage(btn.Image, btn.Size);
+                    } catch (Exception ex) { }
+
+                    allbooks.Add(mybook);
+                    btn.Tag = allbooks.Count()-1;
+                    flpCategories.Controls.Add(btn);
+                    this.Controls.Add(flpCategories);
+                    btn.Click += btn_Click;
+                    
+                }
             }
 
             LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
@@ -52,6 +77,25 @@ namespace Vita_Book_Edit
             AddBook.Enabled = true;
             library.Text = "Change reAddcont Folder Location";
             ErrorNoPath:;
+        }
+
+        void btn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Button b = (Button)sender;
+                int ListID = (int)b.Tag;
+                MessageBox.Show(allbooks[ListID].title);
+
+            }
+            catch { }
+        }
+
+        private static Image ResizeImage(Image image, Size size)
+        {
+            Image img = new Bitmap(image, size);
+
+            return img;
         }
 
         public Form1()
@@ -70,10 +114,13 @@ namespace Vita_Book_Edit
             DialogResult result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
+                flpCategories.Controls.Clear();
+                allbooks.Clear();
                 LibraryLocation = folderBrowserDialog1.SelectedPath;
                 if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
                     File.AppendAllText("settings.ini", LibraryLocation);
                 libcheck();
+                
             }
 
         }
@@ -84,6 +131,12 @@ namespace Vita_Book_Edit
             string bkindex = null;
                 while (!NewBook)
                 {
+                    if (DLCIndex > 6)
+                    {
+                        MessageBox.Show("Reader Book Limit has been reached!");
+                        NewBook = true;
+                        return;
+                    }
                     if (Bookindex > 99)
                     {
                     DLCIndex += 1;

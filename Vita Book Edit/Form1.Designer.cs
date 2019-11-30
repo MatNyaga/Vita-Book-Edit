@@ -37,6 +37,10 @@
             this.LibraryBookNumber = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cleanfolders = new System.Windows.Forms.Button();
+            this.flpCategories = new System.Windows.Forms.FlowLayoutPanel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // library
@@ -52,9 +56,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(655, 23);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(523, 58);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 13);
+            this.label1.Size = new System.Drawing.Size(124, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "My Vita Book Library";
             // 
@@ -94,7 +99,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "ver 0.1";
+            this.label2.Text = "ver 0.2";
             // 
             // cleanfolders
             // 
@@ -107,11 +112,54 @@
             this.cleanfolders.UseVisualStyleBackColor = true;
             this.cleanfolders.Click += new System.EventHandler(this.cleanfolders_Click);
             // 
+            // flpCategories
+            // 
+            this.flpCategories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpCategories.AutoScroll = true;
+            this.flpCategories.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.flpCategories.Location = new System.Drawing.Point(311, 86);
+            this.flpCategories.Name = "flpCategories";
+            this.flpCategories.Size = new System.Drawing.Size(477, 339);
+            this.flpCategories.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(27, 332);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(50, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Authors";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(27, 354);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "GrapheneCt";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(27, 377);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "MatNyaga";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.flpCategories);
             this.Controls.Add(this.cleanfolders);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.LibraryBookNumber);
@@ -140,6 +188,10 @@
         private System.Windows.Forms.Label LibraryBookNumber;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button cleanfolders;
+        private System.Windows.Forms.FlowLayoutPanel flpCategories;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 
