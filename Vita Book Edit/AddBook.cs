@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Vita_Book_Edit
         String BookPath = null;
         BackgroundWorker worker = new BackgroundWorker();
         string EPUBfilename;
+        int ImageCounter;
         public AddBook(String path)
         {
             InitializeComponent();
@@ -72,20 +74,20 @@ namespace Vita_Book_Edit
         private void button1_Click(object sender, EventArgs e)
         {
             
-            //TODO:Add seriesordinal
             //Save the Metadata File
             string str = File.ReadAllText("metadata.xml");
-            str = str.Replace("CUSTOM BOOK TITLE", BookTitleText.Text);
-            str = str.Replace("SERIES NAME FOR SORTING", SeriesNameText.Text);
-            str = str.Replace("SERIES NAME", SeriesNameText.Text);
-            str = str.Replace("AUTHOR FOR SORTING", AuthorText.Text);
-            str = str.Replace("AUTHOR", AuthorText.Text);
-            str = str.Replace("PUBLISHER FOR SORTING", PublisherText.Text);
-            str = str.Replace("PUBLISHER", PublisherText.Text);
-            str = str.Replace("DESCRIPTION HERE", DescriptionText.Text);
-            str = str.Replace("https://www.google.com/", WebsiteText.Text);
-            str = str.Replace("MORE INFO LINK NAME", WebInfoText.Text);
-            str = str.Replace("NOTE FOR LINKS", AddNoteText.Text);
+            str = str.Replace("id_title", BookTitleText.Text);
+            str = str.Replace("id_series_sorting", SeriesNameText.Text);
+            str = str.Replace("id_series", SeriesNameText.Text);
+            str = str.Replace("id_ordinal", SeriesOrdinalText.Text);
+            str = str.Replace("id_author_sorting", AuthorText.Text);
+            str = str.Replace("id_author", AuthorText.Text);
+            str = str.Replace("id_publisher_sorting", PublisherText.Text);
+            str = str.Replace("id_publisher", PublisherText.Text);
+            str = str.Replace("id_description", DescriptionText.Text);
+            str = str.Replace("id_link", WebsiteText.Text);
+            str = str.Replace("id_link_name", WebInfoText.Text);
+            str = str.Replace("id_link_note", AddNoteText.Text);
             //Save to file
             File.WriteAllText(BookPath+"\\"+"metadata.xml", str);
             CoverpictureBox.Image.Save(BookPath + "\\" +"cover.jpg", ImageFormat.Jpeg);
@@ -154,14 +156,47 @@ namespace Vita_Book_Edit
 
         private void selectEPUB_Click(object sender, EventArgs e)
         {
-            
+
+        EPUBincompatible:
+            ImageCounter = 0;
             openFileDialog1.Filter = " EPUB files| *.epub";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                //EPUB compatibility check
                 EPUBfilename = openFileDialog1.FileName;
-                MessageBox.Show(EPUBfilename);
-                worker.RunWorkerAsync();
+                using (ZipArchive archive = ZipFile.Open(EPUBfilename, ZipArchiveMode.Read))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                        ImageCounter += 1;
+                    }
+                }
+
+                if (ImageCounter > 2)
+                {
+                    MessageBox.Show(EPUBfilename);
+                    ImageCounter = 0;
+                }
+                else if (ImageCounter <= 2)
+                {
+                    DialogResult SelectedOption = MessageBox.Show("EPUB file is either incompatible with the Reader or contains less than 2 pages.", "Warning", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Warning);
+                    if (SelectedOption == DialogResult.Retry)
+                        goto EPUBincompatible;
+                    else if (SelectedOption == DialogResult.Abort)
+                        goto EndWithoutCopy;
+                }
+                else if (ImageCounter == 0)
+                {
+                    DialogResult SelectedOption = MessageBox.Show("EPUB file is incompatible with the Reader.", "Warning", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
+                    if (SelectedOption == DialogResult.Retry)
+                        goto EPUBincompatible;
+                    else
+                        goto EndWithoutCopy;
+                }
             }
+            worker.RunWorkerAsync();
+        EndWithoutCopy:;  
         }
     }
 }
