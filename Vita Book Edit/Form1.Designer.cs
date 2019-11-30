@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.library = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -118,6 +119,9 @@
             this.Controls.Add(this.AddBook);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.library);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Vita Book Library";
             this.Load += new System.EventHandler(this.Form1_Load);

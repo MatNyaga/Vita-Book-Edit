@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddBook));
             this.button1 = new System.Windows.Forms.Button();
             this.BookTitleText = new System.Windows.Forms.TextBox();
             this.CoverpictureBox = new System.Windows.Forms.PictureBox();
@@ -58,6 +59,11 @@
             this.selectEPUB = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progresstextlbl = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.SeriesOrdinalText = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.CoverpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpinepictureBox)).BeginInit();
@@ -76,7 +82,7 @@
             // 
             // BookTitleText
             // 
-            this.BookTitleText.Location = new System.Drawing.Point(86, 110);
+            this.BookTitleText.Location = new System.Drawing.Point(89, 118);
             this.BookTitleText.Name = "BookTitleText";
             this.BookTitleText.Size = new System.Drawing.Size(259, 20);
             this.BookTitleText.TabIndex = 4;
@@ -141,7 +147,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 116);
+            this.label1.Location = new System.Drawing.Point(16, 121);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 11;
@@ -150,7 +156,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 159);
+            this.label4.Location = new System.Drawing.Point(15, 163);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(67, 13);
             this.label4.TabIndex = 13;
@@ -158,7 +164,7 @@
             // 
             // SeriesNameText
             // 
-            this.SeriesNameText.Location = new System.Drawing.Point(86, 152);
+            this.SeriesNameText.Location = new System.Drawing.Point(89, 160);
             this.SeriesNameText.Name = "SeriesNameText";
             this.SeriesNameText.Size = new System.Drawing.Size(259, 20);
             this.SeriesNameText.TabIndex = 12;
@@ -166,7 +172,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 202);
+            this.label5.Location = new System.Drawing.Point(16, 247);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 15;
@@ -174,7 +180,7 @@
             // 
             // AuthorText
             // 
-            this.AuthorText.Location = new System.Drawing.Point(86, 196);
+            this.AuthorText.Location = new System.Drawing.Point(89, 244);
             this.AuthorText.Name = "AuthorText";
             this.AuthorText.Size = new System.Drawing.Size(259, 20);
             this.AuthorText.TabIndex = 14;
@@ -182,7 +188,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 250);
+            this.label6.Location = new System.Drawing.Point(16, 289);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(50, 13);
             this.label6.TabIndex = 17;
@@ -190,7 +196,7 @@
             // 
             // PublisherText
             // 
-            this.PublisherText.Location = new System.Drawing.Point(86, 244);
+            this.PublisherText.Location = new System.Drawing.Point(89, 286);
             this.PublisherText.Name = "PublisherText";
             this.PublisherText.Size = new System.Drawing.Size(259, 20);
             this.PublisherText.TabIndex = 16;
@@ -198,7 +204,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 297);
+            this.label7.Location = new System.Drawing.Point(16, 331);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(60, 13);
             this.label7.TabIndex = 19;
@@ -206,7 +212,7 @@
             // 
             // DescriptionText
             // 
-            this.DescriptionText.Location = new System.Drawing.Point(86, 291);
+            this.DescriptionText.Location = new System.Drawing.Point(89, 328);
             this.DescriptionText.Multiline = true;
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(259, 69);
@@ -215,7 +221,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 417);
+            this.label8.Location = new System.Drawing.Point(11, 422);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(71, 13);
             this.label8.TabIndex = 21;
@@ -223,7 +229,7 @@
             // 
             // WebsiteText
             // 
-            this.WebsiteText.Location = new System.Drawing.Point(86, 410);
+            this.WebsiteText.Location = new System.Drawing.Point(89, 419);
             this.WebsiteText.Name = "WebsiteText";
             this.WebsiteText.Size = new System.Drawing.Size(259, 20);
             this.WebsiteText.TabIndex = 20;
@@ -231,7 +237,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(399, 22);
+            this.label9.Location = new System.Drawing.Point(139, 27);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(87, 13);
             this.label9.TabIndex = 22;
@@ -240,7 +246,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(86, 47);
+            this.label10.Location = new System.Drawing.Point(16, 63);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(32, 13);
             this.label10.TabIndex = 23;
@@ -249,7 +255,8 @@
             // BookPathLabel
             // 
             this.BookPathLabel.AutoSize = true;
-            this.BookPathLabel.Location = new System.Drawing.Point(124, 47);
+            this.BookPathLabel.Location = new System.Drawing.Point(86, 63);
+            this.BookPathLabel.MaximumSize = new System.Drawing.Size(280, 0);
             this.BookPathLabel.Name = "BookPathLabel";
             this.BookPathLabel.Size = new System.Drawing.Size(16, 13);
             this.BookPathLabel.TabIndex = 24;
@@ -258,7 +265,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 466);
+            this.label11.Location = new System.Drawing.Point(12, 464);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(48, 13);
             this.label11.TabIndex = 26;
@@ -266,7 +273,7 @@
             // 
             // WebInfoText
             // 
-            this.WebInfoText.Location = new System.Drawing.Point(86, 459);
+            this.WebInfoText.Location = new System.Drawing.Point(89, 461);
             this.WebInfoText.Name = "WebInfoText";
             this.WebInfoText.Size = new System.Drawing.Size(259, 20);
             this.WebInfoText.TabIndex = 25;
@@ -274,15 +281,15 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 518);
+            this.label12.Location = new System.Drawing.Point(12, 505);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(99, 13);
+            this.label12.Size = new System.Drawing.Size(102, 13);
             this.label12.TabIndex = 28;
-            this.label12.Text = "Additional LinkNote";
+            this.label12.Text = "Additional Link Note";
             // 
             // AddNoteText
             // 
-            this.AddNoteText.Location = new System.Drawing.Point(139, 511);
+            this.AddNoteText.Location = new System.Drawing.Point(142, 502);
             this.AddNoteText.Multiline = true;
             this.AddNoteText.Name = "AddNoteText";
             this.AddNoteText.Size = new System.Drawing.Size(206, 40);
@@ -294,7 +301,7 @@
             // 
             // selectEPUB
             // 
-            this.selectEPUB.Location = new System.Drawing.Point(584, 403);
+            this.selectEPUB.Location = new System.Drawing.Point(642, 450);
             this.selectEPUB.Name = "selectEPUB";
             this.selectEPUB.Size = new System.Drawing.Size(177, 40);
             this.selectEPUB.TabIndex = 29;
@@ -318,11 +325,55 @@
             this.progresstextlbl.TabIndex = 31;
             this.progresstextlbl.Text = "0%";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(16, 205);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(56, 13);
+            this.label13.TabIndex = 33;
+            this.label13.Text = "Volume №";
+            // 
+            // SeriesOrdinalText
+            // 
+            this.SeriesOrdinalText.Location = new System.Drawing.Point(89, 202);
+            this.SeriesOrdinalText.Name = "SeriesOrdinalText";
+            this.SeriesOrdinalText.Size = new System.Drawing.Size(259, 20);
+            this.SeriesOrdinalText.TabIndex = 32;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(568, 27);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(90, 13);
+            this.label14.TabIndex = 34;
+            this.label14.Text = "Book Model Data";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(378, 27);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(470, 408);
+            this.groupBox1.TabIndex = 35;
+            this.groupBox1.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Location = new System.Drawing.Point(3, 27);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(369, 524);
+            this.groupBox2.TabIndex = 36;
+            this.groupBox2.TabStop = false;
+            // 
             // AddBook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(904, 587);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.SeriesOrdinalText);
             this.Controls.Add(this.progresstextlbl);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.selectEPUB);
@@ -352,8 +403,13 @@
             this.Controls.Add(this.CoverpictureBox);
             this.Controls.Add(this.BookTitleText);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "AddBook";
-            this.Text = "AddBook";
+            this.Text = "Add Book";
             this.Load += new System.EventHandler(this.AddBook_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CoverpictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackpictureBox)).EndInit();
@@ -395,5 +451,10 @@
         private System.Windows.Forms.Button selectEPUB;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label progresstextlbl;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox SeriesOrdinalText;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

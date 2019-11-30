@@ -22,39 +22,62 @@ namespace Vita_Book_Edit
         Boolean NewBook = false;
         private Button btnAdd = new Button();
 
+        //Universal library format function
+        private void libcheck()
+        {
+            int BookNumber = 0;
+            try
+            {
+                System.IO.Directory.CreateDirectory(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText("settings.ini", String.Empty);
+                MessageBox.Show("Saved reAddcont location not found! Please select it again.");
+                goto ErrorNoPath;
+            }
+            librarypathlabel.Text = LibraryLocation + "\\";
+
+            //Find the Number of Books (Count folders with book in them)
+            const string searchQuery = "*" + "book" + "*";
+            var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+            var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
+            foreach (var d in directories)
+            {
+                if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0) { BookNumber += 1; }
+            }
+
+            LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
+            cleanfolders.Enabled = true;
+            AddBook.Enabled = true;
+            library.Text = "Change reAddcont Folder Location";
+            ErrorNoPath:;
+        }
+
         public Form1()
         {
             InitializeComponent();
+            //Check if library path was saved and act accordingly
+            if (File.ReadLines("settings.ini").ElementAtOrDefault(0) != null)
+            {
+                LibraryLocation = File.ReadLines("settings.ini").ElementAtOrDefault(0);
+                libcheck();
+            }
         }
 
         private void library_Click(object sender, EventArgs e)
         {
-            int BookNumber = 0;
             DialogResult result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
                 LibraryLocation = folderBrowserDialog1.SelectedPath;
-                System.IO.Directory.CreateDirectory(LibraryLocation+"\\"+ReaderTitle+"\\"+DLCBookTitleBase+DLCIndex);
-                librarypathlabel.Text = LibraryLocation + "\\";
-
-                BookNumber = 0;
-                //Find the Number of Books (Count folders with book in them)
-                const string searchQuery = "*" + "book" + "*";
-                var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
-                var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
-                foreach (var d in directories)
-                {
-                    if (Directory.GetFiles(d.FullName+"\\", "metadata.xml").Length != 0) { BookNumber += 1; }           
-                }
-                
-                LibraryBookNumber.Text = "( "+(BookNumber)+" Books )";
-                cleanfolders.Enabled = true;
-                AddBook.Enabled = true;
+                if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                    File.AppendAllText("settings.ini", LibraryLocation);
+                libcheck();
             }
 
         }
 
-        //Needs fixing
         private void AddBook_Click(object sender, EventArgs e)
         {
             Bookindex = 2;
@@ -74,7 +97,7 @@ namespace Vita_Book_Edit
                     {
                         System.IO.Directory.CreateDirectory(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
                         AddBook mybook = new AddBook(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
-                        //mybook.ShowDialog();
+                        mybook.ShowDialog();
                         NewBook = true;
                     }   
                     else
