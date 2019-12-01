@@ -46,6 +46,7 @@
             this.deleteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editBookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refresh = new System.Windows.Forms.Button();
             this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             // 
             this.library.Location = new System.Drawing.Point(39, 23);
             this.library.Name = "library";
-            this.library.Size = new System.Drawing.Size(167, 48);
+            this.library.Size = new System.Drawing.Size(90, 68);
             this.library.TabIndex = 0;
             this.library.Text = "reAddcont Folder Location";
             this.library.UseVisualStyleBackColor = true;
@@ -190,11 +191,23 @@
             this.editBookDetailsToolStripMenuItem.Text = "Edit Book Details";
             this.editBookDetailsToolStripMenuItem.Click += new System.EventHandler(this.editBookDetailsToolStripMenuItem_Click);
             // 
+            // refresh
+            // 
+            this.refresh.Enabled = false;
+            this.refresh.Image = ((System.Drawing.Image)(resources.GetObject("refresh.Image")));
+            this.refresh.Location = new System.Drawing.Point(192, 23);
+            this.refresh.Name = "refresh";
+            this.refresh.Size = new System.Drawing.Size(45, 47);
+            this.refresh.TabIndex = 12;
+            this.refresh.UseVisualStyleBackColor = true;
+            this.refresh.Click += new System.EventHandler(this.refresh_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.refresh);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -236,6 +249,7 @@
         private System.Windows.Forms.ToolStripMenuItem deleteBookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bookDetailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editBookDetailsToolStripMenuItem;
+        private System.Windows.Forms.Button refresh;
     }
 }
 

@@ -148,14 +148,29 @@ namespace Vita_Book_Edit
             str = str.Replace("id_publisher", PublisherText.Text);
             str = str.Replace("id_description", DescriptionText.Text);
             str = str.Replace("id_link", WebsiteText.Text);
-            str = str.Replace("id_link_name", WebInfoText.Text);
-            str = str.Replace("id_link_note", AddNoteText.Text);
+            str = str.Replace("id_name_link", WebInfoText.Text);
+            str = str.Replace("id_note_link", AddNoteText.Text);
             //Save to file
             File.WriteAllText(BookPath+"\\"+"metadata.xml", str);
-            CoverpictureBox.Image.Save(BookPath + "\\" +"cover.jpg", ImageFormat.Jpeg);
-            BackpictureBox.Image.Save(BookPath + "\\" + "back.jpg", ImageFormat.Jpeg);
-            SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
-
+            if (EditMode) { }
+            else
+            {
+                try
+                {
+                    CoverpictureBox.Image.Save(BookPath + "\\" + "cover.jpg", ImageFormat.Jpeg);
+                }
+                catch (Exception ex) { }
+                try
+                {
+                    BackpictureBox.Image.Save(BookPath + "\\" + "back.jpg", ImageFormat.Jpeg);
+                }
+                catch (Exception ex) { }
+                try
+                {
+                    SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
+                }
+                catch (Exception ex) { }
+            }
             MessageBox.Show("Book Added to Library");
             this.Close();
         }
@@ -163,6 +178,7 @@ namespace Vita_Book_Edit
         private void CoverpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
+            EditMode = false;
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
@@ -185,6 +201,7 @@ namespace Vita_Book_Edit
         private void BackpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
+            EditMode = false;
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
@@ -202,6 +219,7 @@ namespace Vita_Book_Edit
         private void SpinepictureBox_Click(object sender, EventArgs e)
         {
             string filename;
+            EditMode = false;
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";

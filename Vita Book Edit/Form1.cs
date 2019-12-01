@@ -279,5 +279,15 @@ namespace Vita_Book_Edit
             AddBook mybook = new AddBook(allbooks[DeleteID]);
             mybook.ShowDialog();
         }
+
+        private void refresh_Click(object sender, EventArgs e)
+        {
+            flpCategories.Controls.Clear();
+            allbooks.Clear();
+            LibraryLocation = folderBrowserDialog1.SelectedPath;
+            if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                File.AppendAllText("settings.ini", LibraryLocation);
+            libcheck();
+        }
     }
 }

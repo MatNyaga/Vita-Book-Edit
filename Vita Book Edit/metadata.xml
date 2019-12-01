@@ -16,8 +16,8 @@
   <description><![CDATA[id_description]]></description>
   <!-- 関連リンク（0から5個） -->
   <links>
-    <link target="id_link">id_link_name</link>
-    <note>id_link_note</note>
+    <link target="id_link">id_name_link</link>
+    <note>id_note_link</note>
   </links>
 </book>
 
