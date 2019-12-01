@@ -193,7 +193,6 @@
             // 
             // refresh
             // 
-            this.refresh.Enabled = false;
             this.refresh.Image = ((System.Drawing.Image)(resources.GetObject("refresh.Image")));
             this.refresh.Location = new System.Drawing.Point(192, 23);
             this.refresh.Name = "refresh";

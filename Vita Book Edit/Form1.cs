@@ -151,6 +151,9 @@ namespace Vita_Book_Edit
             DialogResult result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
+                DLCIndex = 1;
+                BookNumber = 0;
+                Bookindex = 2;
                 flpCategories.Controls.Clear();
                 allbooks.Clear();
                 LibraryLocation = folderBrowserDialog1.SelectedPath;
@@ -282,6 +285,9 @@ namespace Vita_Book_Edit
 
         private void refresh_Click(object sender, EventArgs e)
         {
+            DLCIndex = 1;
+            BookNumber = 0;
+            Bookindex = 2;
             flpCategories.Controls.Clear();
             allbooks.Clear();
             LibraryLocation = folderBrowserDialog1.SelectedPath;
