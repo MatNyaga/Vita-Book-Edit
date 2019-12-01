@@ -5,7 +5,7 @@ Note:
 The Vita only reads EPUBs with image files as pages and a maximum size of 1.2 MB.
 
 To Do:
--Book Gallery Categorization (Edit and Delete)
+-Book Gallery Categorization 
 -Book Deletion
 -Extensive Testing and Bug Fixing.
 -Add EPUB conversion instructions
