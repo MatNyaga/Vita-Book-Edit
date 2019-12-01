@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.library = new System.Windows.Forms.Button();
@@ -41,13 +42,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editBookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // library
             // 
             this.library.Location = new System.Drawing.Point(39, 23);
             this.library.Name = "library";
-            this.library.Size = new System.Drawing.Size(137, 48);
+            this.library.Size = new System.Drawing.Size(167, 48);
             this.library.TabIndex = 0;
             this.library.Text = "reAddcont Folder Location";
             this.library.UseVisualStyleBackColor = true;
@@ -99,7 +105,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "ver 0.2";
+            this.label2.Text = "ver 0.3";
             // 
             // cleanfolders
             // 
@@ -151,6 +157,39 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "MatNyaga";
             // 
+            // DeleteMenuStrip
+            // 
+            this.DeleteMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editBookDetailsToolStripMenuItem,
+            this.bookDetailsToolStripMenuItem,
+            this.deleteBookToolStripMenuItem});
+            this.DeleteMenuStrip.Name = "DeleteMenuStrip";
+            this.DeleteMenuStrip.Size = new System.Drawing.Size(163, 70);
+            // 
+            // deleteBookToolStripMenuItem
+            // 
+            this.deleteBookToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deleteBookToolStripMenuItem.Image")));
+            this.deleteBookToolStripMenuItem.Name = "deleteBookToolStripMenuItem";
+            this.deleteBookToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.deleteBookToolStripMenuItem.Text = "Delete Book";
+            this.deleteBookToolStripMenuItem.Click += new System.EventHandler(this.deleteBookToolStripMenuItem_Click);
+            // 
+            // bookDetailsToolStripMenuItem
+            // 
+            this.bookDetailsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("bookDetailsToolStripMenuItem.Image")));
+            this.bookDetailsToolStripMenuItem.Name = "bookDetailsToolStripMenuItem";
+            this.bookDetailsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.bookDetailsToolStripMenuItem.Text = "Book Details";
+            this.bookDetailsToolStripMenuItem.Click += new System.EventHandler(this.bookDetailsToolStripMenuItem_Click);
+            // 
+            // editBookDetailsToolStripMenuItem
+            // 
+            this.editBookDetailsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editBookDetailsToolStripMenuItem.Image")));
+            this.editBookDetailsToolStripMenuItem.Name = "editBookDetailsToolStripMenuItem";
+            this.editBookDetailsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.editBookDetailsToolStripMenuItem.Text = "Edit Book Details";
+            this.editBookDetailsToolStripMenuItem.Click += new System.EventHandler(this.editBookDetailsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -173,6 +212,7 @@
             this.Name = "Form1";
             this.Text = "Vita Book Library";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.DeleteMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,6 +232,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ContextMenuStrip DeleteMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem deleteBookToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookDetailsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editBookDetailsToolStripMenuItem;
     }
 }
 

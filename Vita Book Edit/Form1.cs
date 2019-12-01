@@ -26,6 +26,7 @@ namespace Vita_Book_Edit
         string xmlInputData = string.Empty;
         string xmlOutputData = string.Empty;
         List<book> allbooks = new List<book>();
+        int DeleteID;
 
         private Button btnAdd = new Button();
 
@@ -47,36 +48,74 @@ namespace Vita_Book_Edit
 
             //Find the Number of Books (Count folders with book in them)
             const string searchQuery = "*" + "book" + "*";
-            var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
-            var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
-            foreach (var d in directories)
-            {
-                if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0) { BookNumber += 1;
-                    xmlInputData = File.ReadAllText(d.FullName + "\\"+"metadata.xml");
-                    book mybook = ser.Deserialize<book>(xmlInputData);
-                    Button btn = new Button();
-                    btn.Text = mybook.title;
-                    btn.Size = new System.Drawing.Size(177, 250);
-                    btn.ForeColor = Color.BlueViolet;
-                    try {
-                        btn.Image = Image.FromFile(d.FullName + "\\" + "cover.jpg");
-                        btn.Image = ResizeImage(btn.Image, btn.Size);
-                    } catch (Exception ex) { }
+            for (int i = 0; i < 7; i++) {
+                if (Directory.Exists(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + i)){DLCIndex = i;
+                
+                    var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+                    var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
+                    foreach (var d in directories)
+                    {
+                        if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0)
+                        {
+                            BookNumber += 1;
+                            xmlInputData = File.ReadAllText(d.FullName + "\\" + "metadata.xml");
+                            book mybook = ser.Deserialize<book>(xmlInputData);
+                            Button btn = new Button();
+                            btn.Text = mybook.title;
+                            mybook.bookpath = d.FullName;
+                            btn.Size = new System.Drawing.Size(177, 250);
+                            btn.ForeColor = Color.BlueViolet;
+                            try
+                            {
+                                using (FileStream stream = new FileStream(d.FullName + "\\" + "cover.jpg", FileMode.Open, FileAccess.Read))
+                                {
+                                    btn.Image = Image.FromStream(stream);
+                                    stream.Dispose();
+                                    btn.Image = ResizeImage(btn.Image, btn.Size);
+                                }
+                            }
+                            catch (Exception ex) { }
 
-                    allbooks.Add(mybook);
-                    btn.Tag = allbooks.Count()-1;
-                    flpCategories.Controls.Add(btn);
-                    this.Controls.Add(flpCategories);
-                    btn.Click += btn_Click;
-                    
+                            allbooks.Add(mybook);
+                            btn.Tag = allbooks.Count() - 1;
+                            flpCategories.Controls.Add(btn);
+                            this.Controls.Add(flpCategories);
+                            btn.Click += btn_Click;
+                            btn.MouseDown += new MouseEventHandler(this.btn_Click);
+                        }
+
+                }
+                }
+                else
+                {
+                    //return;
                 }
             }
-
             LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
             cleanfolders.Enabled = true;
             AddBook.Enabled = true;
             library.Text = "Change reAddcont Folder Location";
             ErrorNoPath:;
+        }
+
+        void btn_Click(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                Button b = (Button)sender; 
+                switch (e.Button)
+                {
+                    case MouseButtons.Right:
+                        {
+                            DeleteID = (int)b.Tag;
+                            DeleteMenuStrip.Show(this, e.Location);
+                            DeleteMenuStrip.Show(Cursor.Position);//places the menu at the pointer position
+                        }
+                        break;
+                }
+
+            }
+            catch { }
         }
 
         void btn_Click(object sender, EventArgs e)
@@ -86,7 +125,6 @@ namespace Vita_Book_Edit
                 Button b = (Button)sender;
                 int ListID = (int)b.Tag;
                 MessageBox.Show(allbooks[ListID].title);
-
             }
             catch { }
         }
@@ -94,7 +132,6 @@ namespace Vita_Book_Edit
         private static Image ResizeImage(Image image, Size size)
         {
             Image img = new Bitmap(image, size);
-
             return img;
         }
 
@@ -174,11 +211,6 @@ namespace Vita_Book_Edit
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //Format controls. Note: Controls inherit color from parent form.
-            this.btnAdd.BackColor = Color.Gray;
-            this.btnAdd.Text = "Book";
-            this.btnAdd.Location = new System.Drawing.Point(90, 25);
-            this.btnAdd.Size = new System.Drawing.Size(50, 25);
         }
 
         private static void CleanDirectory(string startLocation)
@@ -198,6 +230,54 @@ namespace Vita_Book_Edit
         {
             CleanDirectory(LibraryLocation + "\\" + ReaderTitle);
             MessageBox.Show("Library Cleaned");
+        }
+
+        private void deleteBookToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            DialogResult result = MessageBox.Show("Are you sure you want to Delete this book?", "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (result.Equals(DialogResult.OK))
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(allbooks[DeleteID].bookpath);
+
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+                flpCategories.Controls.Clear();
+                allbooks.Clear();
+                libcheck();
+                MessageBox.Show("Book Deleted!");
+            }
+            else
+            {
+                DeleteID = 0;
+                return;
+            }
+            
+            DeleteID = 0;
+        }
+
+        private void bookDetailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Book Path:"+Environment.NewLine +
+                allbooks[DeleteID].bookpath +Environment.NewLine + Environment.NewLine+
+                "Author: "+ allbooks[DeleteID].authors[0].author + Environment.NewLine+
+                "Series Name: " + allbooks[DeleteID].seriesName + Environment.NewLine+
+                "Volume No: " + allbooks[DeleteID].seriesOrdinal + Environment.NewLine+
+                "Title: " + allbooks[DeleteID].title + Environment.NewLine+
+                "Publisher: " + allbooks[DeleteID].publisher + Environment.NewLine+
+                "Description: " + allbooks[DeleteID].description + Environment.NewLine);
+        }
+
+        private void editBookDetailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddBook mybook = new AddBook(allbooks[DeleteID]);
+            mybook.ShowDialog();
         }
     }
 }
