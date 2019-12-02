@@ -47,6 +47,7 @@
             this.bookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editBookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refresh = new System.Windows.Forms.Button();
+            this.searchbox = new System.Windows.Forms.TextBox();
             this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -201,11 +202,20 @@
             this.refresh.UseVisualStyleBackColor = true;
             this.refresh.Click += new System.EventHandler(this.refresh_Click);
             // 
+            // searchbox
+            // 
+            this.searchbox.Location = new System.Drawing.Point(311, 55);
+            this.searchbox.Name = "searchbox";
+            this.searchbox.Size = new System.Drawing.Size(206, 20);
+            this.searchbox.TabIndex = 13;
+            this.searchbox.TextChanged += new System.EventHandler(this.searchbox_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.searchbox);
             this.Controls.Add(this.refresh);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -249,6 +259,7 @@
         private System.Windows.Forms.ToolStripMenuItem bookDetailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editBookDetailsToolStripMenuItem;
         private System.Windows.Forms.Button refresh;
+        private System.Windows.Forms.TextBox searchbox;
     }
 }
 

@@ -20,7 +20,9 @@ namespace Vita_Book_Edit
         BackgroundWorker worker = new BackgroundWorker();
         string EPUBfilename;
         int ImageCounter;
-        Boolean EditMode = false;
+        Boolean CoverEditMode = false;
+        Boolean BackEditMode = false;
+        Boolean SpineEditMode = false;
 
         public AddBook(String path)
         {
@@ -88,7 +90,9 @@ namespace Vita_Book_Edit
 
             selectEPUB.Enabled = false;
             button1.Enabled = true;
-            EditMode = true;
+            CoverEditMode = true;
+            BackEditMode = true;
+            SpineEditMode = true;
 
         }
 
@@ -152,7 +156,7 @@ namespace Vita_Book_Edit
             str = str.Replace("id_note_link", AddNoteText.Text);
             //Save to file
             File.WriteAllText(BookPath+"\\"+"metadata.xml", str);
-            if (EditMode) { }
+            if (CoverEditMode) { }
             else
             {
                 try
@@ -160,17 +164,29 @@ namespace Vita_Book_Edit
                     CoverpictureBox.Image.Save(BookPath + "\\" + "cover.jpg", ImageFormat.Jpeg);
                 }
                 catch (Exception ex) { }
+            }
+            if (BackEditMode) { }
+            else
+            {
                 try
                 {
                     BackpictureBox.Image.Save(BookPath + "\\" + "back.jpg", ImageFormat.Jpeg);
                 }
                 catch (Exception ex) { }
+            }
+            if (SpineEditMode) { }
+            else
+            {
                 try
                 {
                     SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
                 }
                 catch (Exception ex) { }
             }
+                
+                
+                
+            
             MessageBox.Show("Book Added to Library");
             this.Close();
         }
@@ -178,7 +194,7 @@ namespace Vita_Book_Edit
         private void CoverpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
-            EditMode = false;
+            
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
@@ -188,6 +204,7 @@ namespace Vita_Book_Edit
                 img = resizeImage(img, new Size(177, 250));
                 CoverpictureBox.Image = img;
                 filename = null;
+                CoverEditMode = false;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
@@ -201,7 +218,7 @@ namespace Vita_Book_Edit
         private void BackpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
-            EditMode = false;
+            
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
@@ -211,6 +228,7 @@ namespace Vita_Book_Edit
                 img = resizeImage(img, new Size(177, 250));
                 BackpictureBox.Image = img;
                 filename = null;
+                BackEditMode = false;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
@@ -219,7 +237,6 @@ namespace Vita_Book_Edit
         private void SpinepictureBox_Click(object sender, EventArgs e)
         {
             string filename;
-            EditMode = false;
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
@@ -229,6 +246,7 @@ namespace Vita_Book_Edit
                 img = resizeImage(img, new Size(30, 300));
                 SpinepictureBox.Image = img;
                 filename = null;
+                SpineEditMode = false;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
