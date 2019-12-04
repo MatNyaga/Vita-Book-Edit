@@ -121,9 +121,6 @@
     <Content Include="metadata.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\cover.jpg" />
-    <None Include="Resources\back.jpg" />
-    <None Include="Resources\spine.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

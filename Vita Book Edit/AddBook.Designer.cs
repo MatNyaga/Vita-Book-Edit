@@ -63,16 +63,19 @@
             this.SeriesOrdinalText = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.ModelType = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.CoverpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpinepictureBox)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(642, 511);
+            this.button1.Location = new System.Drawing.Point(195, 610);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(177, 40);
             this.button1.TabIndex = 0;
@@ -89,7 +92,9 @@
             // 
             // CoverpictureBox
             // 
-            this.CoverpictureBox.Image = global::Vita_Book_Edit.Properties.Resources.cover;
+            this.CoverpictureBox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.CoverpictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.CoverpictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.CoverpictureBox.Location = new System.Drawing.Point(387, 110);
             this.CoverpictureBox.Name = "CoverpictureBox";
             this.CoverpictureBox.Size = new System.Drawing.Size(177, 250);
@@ -99,8 +104,10 @@
             // 
             // BackpictureBox
             // 
-            this.BackpictureBox.Image = global::Vita_Book_Edit.Properties.Resources.back;
-            this.BackpictureBox.Location = new System.Drawing.Point(584, 110);
+            this.BackpictureBox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.BackpictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.BackpictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BackpictureBox.Location = new System.Drawing.Point(9, 373);
             this.BackpictureBox.Name = "BackpictureBox";
             this.BackpictureBox.Size = new System.Drawing.Size(177, 250);
             this.BackpictureBox.TabIndex = 6;
@@ -109,8 +116,10 @@
             // 
             // SpinepictureBox
             // 
-            this.SpinepictureBox.Image = global::Vita_Book_Edit.Properties.Resources.spine;
-            this.SpinepictureBox.Location = new System.Drawing.Point(789, 110);
+            this.SpinepictureBox.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.SpinepictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.SpinepictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SpinepictureBox.Location = new System.Drawing.Point(751, 110);
             this.SpinepictureBox.Name = "SpinepictureBox";
             this.SpinepictureBox.Size = new System.Drawing.Size(30, 300);
             this.SpinepictureBox.TabIndex = 7;
@@ -129,7 +138,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(660, 81);
+            this.label2.Location = new System.Drawing.Point(83, 348);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 9;
@@ -138,7 +147,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(786, 81);
+            this.label3.Location = new System.Drawing.Point(748, 81);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 10;
@@ -301,7 +310,7 @@
             // 
             // selectEPUB
             // 
-            this.selectEPUB.Location = new System.Drawing.Point(642, 450);
+            this.selectEPUB.Location = new System.Drawing.Point(12, 610);
             this.selectEPUB.Name = "selectEPUB";
             this.selectEPUB.Size = new System.Drawing.Size(177, 40);
             this.selectEPUB.TabIndex = 29;
@@ -311,15 +320,15 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(3, 574);
+            this.progressBar1.Location = new System.Drawing.Point(3, 698);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(898, 11);
+            this.progressBar1.Size = new System.Drawing.Size(790, 14);
             this.progressBar1.TabIndex = 30;
             // 
             // progresstextlbl
             // 
             this.progresstextlbl.AutoSize = true;
-            this.progresstextlbl.Location = new System.Drawing.Point(859, 555);
+            this.progresstextlbl.Location = new System.Drawing.Point(762, 682);
             this.progresstextlbl.Name = "progresstextlbl";
             this.progresstextlbl.Size = new System.Drawing.Size(21, 13);
             this.progresstextlbl.TabIndex = 31;
@@ -352,17 +361,43 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.ModelType);
+            this.groupBox1.Controls.Add(this.BackpictureBox);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(378, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(470, 408);
+            this.groupBox1.Size = new System.Drawing.Size(415, 640);
             this.groupBox1.TabIndex = 35;
             this.groupBox1.TabStop = false;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(24, 27);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(63, 13);
+            this.label15.TabIndex = 37;
+            this.label15.Text = "Model Type";
+            // 
+            // ModelType
+            // 
+            this.ModelType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ModelType.FormattingEnabled = true;
+            this.ModelType.Items.AddRange(new object[] {
+            "Portrait",
+            "Album"});
+            this.ModelType.Location = new System.Drawing.Point(93, 24);
+            this.ModelType.Name = "ModelType";
+            this.ModelType.Size = new System.Drawing.Size(121, 21);
+            this.ModelType.TabIndex = 37;
+            this.ModelType.SelectedIndexChanged += new System.EventHandler(this.ModelType_SelectedIndexChanged);
             // 
             // groupBox2
             // 
             this.groupBox2.Location = new System.Drawing.Point(3, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(369, 524);
+            this.groupBox2.Size = new System.Drawing.Size(369, 566);
             this.groupBox2.TabIndex = 36;
             this.groupBox2.TabStop = false;
             // 
@@ -370,12 +405,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(904, 587);
+            this.ClientSize = new System.Drawing.Size(795, 714);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.SeriesOrdinalText);
             this.Controls.Add(this.progresstextlbl);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.SpinepictureBox);
             this.Controls.Add(this.selectEPUB);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.AddNoteText);
@@ -395,11 +432,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.SeriesNameText);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.Cover);
-            this.Controls.Add(this.SpinepictureBox);
-            this.Controls.Add(this.BackpictureBox);
             this.Controls.Add(this.CoverpictureBox);
             this.Controls.Add(this.BookTitleText);
             this.Controls.Add(this.button1);
@@ -414,6 +447,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CoverpictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackpictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpinepictureBox)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -456,5 +491,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox ModelType;
+        private System.Windows.Forms.Label label15;
     }
 }

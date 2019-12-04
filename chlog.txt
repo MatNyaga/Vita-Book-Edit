@@ -1,0 +1,4 @@
+-Added book model type selection. Book model type is stored in metadata.
+-Added additional EPUB check: if there are images greater than 1.20MB, user will be prompted with a warning.
+-Redesigned book cover selection window 
+-Cover, back and spine images now can be edited or added separately. 

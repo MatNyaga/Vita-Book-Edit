@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <book>
+  <model>id_model</model>
   <!-- 書籍名（必須） -->
   <title>id_title</title>
   <!-- シリーズ名（必須） -->

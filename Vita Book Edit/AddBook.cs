@@ -16,17 +16,24 @@ namespace Vita_Book_Edit
 {
     public partial class AddBook : Form
     {
+        Point CoverBackSize = new Point { X = 177, Y = 250 };
+        Point SpineSize = new Point { X = 30, Y = 250 };
         String BookPath = null;
         BackgroundWorker worker = new BackgroundWorker();
         string EPUBfilename;
         int ImageCounter;
-        Boolean CoverEditMode = false;
-        Boolean BackEditMode = false;
-        Boolean SpineEditMode = false;
+        int SizeLimit = 1200000;
+        Boolean EditMode = true;
+        Boolean NewCover = true;
+        Boolean NewBack = true;
+        Boolean NewSpine = true;
+        Boolean SizeWarning = true;
 
         public AddBook(String path)
         {
             InitializeComponent();
+            ModelType.SelectedIndex = 0;
+            EditMode = false;
             BookPath = path;
             BookPathLabel.Text = BookPath + "\\";
             worker.WorkerSupportsCancellation = true;
@@ -58,41 +65,41 @@ namespace Vita_Book_Edit
             //Load the Cover Image
             try
             {
-                using (FileStream stream = new FileStream(BookPath + "\\" + "cover.jpg", FileMode.Open, FileAccess.Read))
-                {
-                    CoverpictureBox.Image = Image.FromStream(stream);
-                    stream.Dispose();
-                }
+                CoverpictureBox.Load(BookPath + "\\" + "cover.jpg");
+                NewCover = false;
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                NewCover = false;
+            }
 
             //Load the Back Image
             try
             {
-                using (FileStream stream = new FileStream(BookPath + "\\" + "back.jpg", FileMode.Open, FileAccess.Read))
-                {
-                    BackpictureBox.Image = Image.FromStream(stream);
-                    stream.Dispose();
-                }
+                BackpictureBox.Load(BookPath + "\\" + "back.jpg");
+                NewBack = false;
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            {
+                NewBack = false;
+            }
 
             //Load the Spine Image
             try
             {
-                using (FileStream stream = new FileStream(BookPath + "\\" + "spine.jpg", FileMode.Open, FileAccess.Read))
-                {
-                    SpinepictureBox.Image = Image.FromStream(stream);
-                    stream.Dispose();
-                }
+                SpinepictureBox.Load(BookPath + "\\" + "spine.jpg");
+                NewSpine = false;
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            { 
+                NewSpine = false; 
+            }
 
             selectEPUB.Enabled = false;
             button1.Enabled = true;
-            CoverEditMode = true;
-            BackEditMode = true;
-            SpineEditMode = true;
+            ModelType.SelectedIndex = book.model;
+            ModelType.Enabled = false;
+            EditMode = true;
 
         }
 
@@ -113,8 +120,7 @@ namespace Vita_Book_Edit
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            try { copyfile(EPUBfilename, BookPath + "\\" + "book.epub"); } catch (Exception ex) { }
-            
+            copyfile(EPUBfilename, BookPath + "\\" + "book.epub");
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -139,9 +145,10 @@ namespace Vita_Book_Edit
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             //Save the Metadata File
             string str = File.ReadAllText("metadata.xml");
+            str = str.Replace("id_model", ModelType.SelectedIndex.ToString());
             str = str.Replace("id_title", BookTitleText.Text);
             str = str.Replace("id_series_sorting", SeriesNameText.Text);
             str = str.Replace("id_series", SeriesNameText.Text);
@@ -155,56 +162,45 @@ namespace Vita_Book_Edit
             str = str.Replace("id_name_link", WebInfoText.Text);
             str = str.Replace("id_note_link", AddNoteText.Text);
             //Save to file
-            File.WriteAllText(BookPath+"\\"+"metadata.xml", str);
-            if (CoverEditMode) { }
-            else
+            File.WriteAllText(BookPath + "\\" + "metadata.xml", str);
+            if (EditMode)
             {
-                try
-                {
+                if (NewCover)
                     CoverpictureBox.Image.Save(BookPath + "\\" + "cover.jpg", ImageFormat.Jpeg);
-                }
-                catch (Exception ex) { }
-            }
-            if (BackEditMode) { }
-            else
-            {
-                try
-                {
+                if (NewBack)
                     BackpictureBox.Image.Save(BookPath + "\\" + "back.jpg", ImageFormat.Jpeg);
-                }
-                catch (Exception ex) { }
+                if (NewSpine)
+                    SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
             }
-            if (SpineEditMode) { }
             else
             {
-                try
-                {
+                if (CoverpictureBox.Image != null)
+                    CoverpictureBox.Image.Save(BookPath + "\\" + "cover.jpg", ImageFormat.Jpeg);
+                if (BackpictureBox.Image != null)
+                    BackpictureBox.Image.Save(BookPath + "\\" + "back.jpg", ImageFormat.Jpeg);
+                if (SpinepictureBox.Image != null)
                     SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
-                }
-                catch (Exception ex) { }
             }
-                
-                
-                
-            
-            MessageBox.Show("Book Added to Library");
+            if (EditMode)
+                MessageBox.Show("Book has been updated");
+            else
+                MessageBox.Show("Book Added to Library");
             this.Close();
         }
 
         private void CoverpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
-            
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
                 openFileDialog1.ShowDialog();
                 filename = openFileDialog1.FileName;
                 Image img = Image.FromFile(filename);
-                img = resizeImage(img, new Size(177, 250));
+                img = resizeImage(img, new Size(CoverBackSize));
                 CoverpictureBox.Image = img;
                 filename = null;
-                CoverEditMode = false;
+                NewCover = true;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
@@ -218,17 +214,16 @@ namespace Vita_Book_Edit
         private void BackpictureBox_Click(object sender, EventArgs e)
         {
             string filename;
-            
             try
             {
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
                 openFileDialog1.ShowDialog();
                 filename = openFileDialog1.FileName;
                 Image img = Image.FromFile(filename);
-                img = resizeImage(img, new Size(177, 250));
+                img = resizeImage(img, new Size(CoverBackSize));
                 BackpictureBox.Image = img;
                 filename = null;
-                BackEditMode = false;
+                NewBack = true;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
@@ -243,10 +238,10 @@ namespace Vita_Book_Edit
                 openFileDialog1.ShowDialog();
                 filename = openFileDialog1.FileName;
                 Image img = Image.FromFile(filename);
-                img = resizeImage(img, new Size(30, 300));
+                img = resizeImage(img, new Size(SpineSize));
                 SpinepictureBox.Image = img;
                 filename = null;
-                SpineEditMode = false;
+                NewSpine = true;
             }
             catch (Exception ex) { }
             openFileDialog1.Reset();
@@ -267,7 +262,14 @@ namespace Vita_Book_Edit
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
                         if (entry.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-                        ImageCounter += 1;
+                        {
+                            ImageCounter += 1;
+                            if (SizeWarning && entry.Length > SizeLimit)
+                            {
+                                MessageBox.Show("EPUB file contains images greater than 1.20MB. Images should be under 1.20MB to achieve best Reader performance.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                SizeWarning = false;
+                            }
+                        }
                     }
                 }
 
@@ -292,9 +294,37 @@ namespace Vita_Book_Edit
                     else
                         goto EndWithoutCopy;
                 }
+                worker.RunWorkerAsync();
             }
-            worker.RunWorkerAsync();
         EndWithoutCopy:;  
+        }
+
+        //Book model type selection
+        private void ModelType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ModelType.SelectedIndex == 0)
+            {
+                CoverBackSize = new Point { X = 177, Y = 250 };
+                SpineSize = new Point { X = 30, Y = 250 };
+                CoverpictureBox.Size = new System.Drawing.Size(177, 250);
+                BackpictureBox.Size = new System.Drawing.Size(177, 250);
+                SpinepictureBox.Size = new System.Drawing.Size(30, 250);
+            }
+            else if (ModelType.SelectedIndex == 1)
+            {
+                CoverBackSize = new Point { X = 350, Y = 250 };
+                SpineSize = new Point { X = 30, Y = 250 };
+                CoverpictureBox.Size = new System.Drawing.Size(350, 250);
+                BackpictureBox.Size = new System.Drawing.Size(350, 250);
+                SpinepictureBox.Size = new System.Drawing.Size(30, 250);
+            }
+            if (EditMode) { }
+            else
+            {
+                CoverpictureBox.Image = null;
+                BackpictureBox.Image = null;
+                SpinepictureBox.Image = null;
+            }
         }
     }
 }

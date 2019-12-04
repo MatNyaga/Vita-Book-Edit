@@ -12,6 +12,7 @@ namespace Vita_Book_Edit
     {
         public string descriptiontemplate = "![CDATA[id_description]] ";
         public string bookpath = null;
+        public int model { get; set; }
         public string title { get; set; }
         public string seriesName { get; set; }
         public string seriesOrdinal { get; set; }

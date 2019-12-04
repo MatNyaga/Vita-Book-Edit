@@ -61,9 +61,12 @@ namespace Vita_Book_Edit
                             xmlInputData = File.ReadAllText(d.FullName + "\\" + "metadata.xml");
                             book mybook = ser.Deserialize<book>(xmlInputData);
                             Button btn = new Button();
-                            btn.Text = mybook.title+ " - "+mybook.authors[0].author;
+                            btn.Text = mybook.title;
                             mybook.bookpath = d.FullName;
-                            btn.Size = new System.Drawing.Size(177, 250);
+                            if (mybook.model == 0)
+                                btn.Size = new System.Drawing.Size(177, 250);
+                            else if (mybook.model == 1)
+                                btn.Size = new System.Drawing.Size(350, 250);
                             btn.ForeColor = Color.BlueViolet;
                             try
                             {
@@ -124,7 +127,7 @@ namespace Vita_Book_Edit
             {
                 Button b = (Button)sender;
                 int ListID = (int)b.Tag;
-                MessageBox.Show(allbooks[ListID].title+" - "+ allbooks[ListID].authors[0].author);
+                MessageBox.Show(allbooks[ListID].title);
             }
             catch { }
         }
@@ -167,6 +170,11 @@ namespace Vita_Book_Edit
 
         private void AddBook_Click(object sender, EventArgs e)
         {
+            if (librarypathlabel.Text == "\\")
+            {
+                MessageBox.Show("Please select the Book Library folder on the Vita (reAddcont).");
+                return;
+            }
             Bookindex = 2;
             string bkindex = null;
                 while (!NewBook)
@@ -294,41 +302,6 @@ namespace Vita_Book_Edit
             if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
                 File.AppendAllText("settings.ini", LibraryLocation);
             libcheck();
-        }
-
-        private void searchbox_TextChanged(object sender, EventArgs e)
-        {
-            if (searchbox.Text == "")
-            {
-                foreach (Button c in flpCategories.Controls.OfType<Button>())
-                {
-                    c.FlatAppearance.BorderColor = Color.White;
-                    c.Visible = true;
-                }
-                return;
-            }
-            foreach (Button c in flpCategories.Controls)
-            {
-                try
-                {
-                    if (c.Text.ToLower().Contains(searchbox.Text.ToLower()))
-                    {
-                        c.FlatAppearance.BorderColor = Color.Yellow;
-                        c.Visible = true;
-
-                    }
-                    else
-                    {
-                        c.Visible = false;
-                    }
-                    if (!c.Text.ToLower().Contains(searchbox.Text.ToLower()))
-                    {
-                        c.FlatAppearance.BorderColor = Color.White;
-                    }
-                }
-                catch (Exception ex) { }
-
-            }
         }
     }
 }
