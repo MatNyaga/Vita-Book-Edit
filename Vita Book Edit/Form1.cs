@@ -61,7 +61,7 @@ namespace Vita_Book_Edit
                             xmlInputData = File.ReadAllText(d.FullName + "\\" + "metadata.xml");
                             book mybook = ser.Deserialize<book>(xmlInputData);
                             Button btn = new Button();
-                            btn.Text = mybook.title;
+                            btn.Text = mybook.title+" - "+mybook.authors[0].author;
                             mybook.bookpath = d.FullName;
                             if (mybook.model == 0)
                                 btn.Size = new System.Drawing.Size(177, 250);
@@ -302,6 +302,41 @@ namespace Vita_Book_Edit
             if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
                 File.AppendAllText("settings.ini", LibraryLocation);
             libcheck();
+        }
+
+        private void searchTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (searchTxt.Text == "")
+            {
+                foreach (Button c in flpCategories.Controls.OfType<Button>())
+                {
+                    c.BackColor = Color.White;
+                    c.Visible = true;
+
+                }
+                return;
+            }
+            foreach (Button c in flpCategories.Controls)
+            {
+                try
+                {
+                    if (c.Text.ToLower().Contains(searchTxt.Text.ToLower()))
+                    {
+                        c.BackColor = Color.Yellow;
+                        c.Visible = true;
+                    }
+                    else
+                    {
+                        c.Visible = false;
+                    }
+                    if (!c.Text.ToLower().Contains(searchTxt.Text.ToLower()))
+                    {
+                        c.BackColor = Color.White;
+                    }
+                }
+                catch (Exception ex) { }
+
+            }
         }
     }
 }

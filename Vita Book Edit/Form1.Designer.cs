@@ -47,6 +47,7 @@
             this.bookDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refresh = new System.Windows.Forms.Button();
+            this.searchTxt = new System.Windows.Forms.TextBox();
             this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,7 +65,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(379, 57);
+            this.label1.Location = new System.Drawing.Point(381, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 13);
             this.label1.TabIndex = 1;
@@ -93,7 +94,7 @@
             // LibraryBookNumber
             // 
             this.LibraryBookNumber.AutoSize = true;
-            this.LibraryBookNumber.Location = new System.Drawing.Point(511, 57);
+            this.LibraryBookNumber.Location = new System.Drawing.Point(511, 60);
             this.LibraryBookNumber.Name = "LibraryBookNumber";
             this.LibraryBookNumber.Size = new System.Drawing.Size(58, 13);
             this.LibraryBookNumber.TabIndex = 4;
@@ -195,18 +196,27 @@
             // refresh
             // 
             this.refresh.Image = ((System.Drawing.Image)(resources.GetObject("refresh.Image")));
-            this.refresh.Location = new System.Drawing.Point(160, 23);
+            this.refresh.Location = new System.Drawing.Point(160, 16);
             this.refresh.Name = "refresh";
-            this.refresh.Size = new System.Drawing.Size(45, 47);
+            this.refresh.Size = new System.Drawing.Size(46, 38);
             this.refresh.TabIndex = 12;
             this.refresh.UseVisualStyleBackColor = true;
             this.refresh.Click += new System.EventHandler(this.refresh_Click);
+            // 
+            // searchTxt
+            // 
+            this.searchTxt.Location = new System.Drawing.Point(160, 60);
+            this.searchTxt.Name = "searchTxt";
+            this.searchTxt.Size = new System.Drawing.Size(213, 20);
+            this.searchTxt.TabIndex = 13;
+            this.searchTxt.TextChanged += new System.EventHandler(this.searchTxt_TextChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.searchTxt);
             this.Controls.Add(this.refresh);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -250,6 +260,7 @@
         private System.Windows.Forms.ToolStripMenuItem bookDetailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editBookDetailsToolStripMenuItem;
         private System.Windows.Forms.Button refresh;
+        private System.Windows.Forms.TextBox searchTxt;
     }
 }
 
