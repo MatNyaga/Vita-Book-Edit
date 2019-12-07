@@ -139,8 +139,13 @@ namespace Vita_Book_Edit
 
         private void AddBook_Load(object sender, EventArgs e)
         {
-
+            if (!EditMode)
+            {
+                SpinepictureBox.Image = Properties.Resources.spine;
+                BackpictureBox.Image = Properties.Resources.back;
+            }
             
+
         }
 
         private void button1_Click(object sender, EventArgs e)

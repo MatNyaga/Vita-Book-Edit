@@ -14,8 +14,11 @@ namespace Vita_Book_Edit
     public partial class Form1 : Form
     {
         String LibraryLocation = null;
+        String baseval1 = "book";
+        String baseval2 = "u";
         String ReaderTitle = "PCSC80012";
         String DLCBookTitleBase = "00000000BLKSTOK";
+        String PatchFolder = "reAddcont";
         int DLCIndex = 1;
         int BookNumber = 0;
         int Bookindex = 2;
@@ -36,26 +39,39 @@ namespace Vita_Book_Edit
             int BookNumber = 0;
             try
             {
-                System.IO.Directory.CreateDirectory(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+                System.IO.Directory.CreateDirectory(LibraryLocation + baseval1 + "\\" + baseval2 + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
             }
             catch (Exception ex)
             {
                 File.WriteAllText("settings.ini", String.Empty);
-                MessageBox.Show("Saved reAddcont location not found! Please select it again.");
+                MessageBox.Show("Saved ux0:/ location not found! Please select it again.");
                 goto ErrorNoPath;
             }
-            librarypathlabel.Text = LibraryLocation + "\\";
+            librarypathlabel.Text = LibraryLocation;
 
-            //Find the Number of Books (Count folders with book in them)
-            const string searchQuery = "*" + "book" + "*";
+            //Checks patch folder
+            if (Directory.Exists(LibraryLocation + PatchFolder + "\\" +ReaderTitle))
+            {
+                MessageBox.Show(this,"Please ensure you DELETE the folder and contents in: " + Environment.NewLine +
+                    Environment.NewLine +
+                    LibraryLocation + PatchFolder + "\\" + ReaderTitle + Environment.NewLine +
+                    Environment.NewLine +
+                    " or MOVE them to " + Environment.NewLine +
+                    Environment.NewLine +
+                    LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + Environment.NewLine +
+                    Environment.NewLine +
+                    " for the Library to be recognized as non-sample books in the Vita","PLEASE NOTE!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            }
+                //Find the Number of Books (Count folders with book in them)
+                const string searchQuery = "*" + "book" + "*";
             for (int i = 0; i < 7; i++) {
-                if (Directory.Exists(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + i)){DLCIndex = i;
+                if (Directory.Exists(LibraryLocation + baseval1 + "\\" + baseval2 + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + i)){DLCIndex = i;
                 
-                    var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+                    var directory = new DirectoryInfo(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
                     var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
                     foreach (var d in directories)
                     {
-                        if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0)
+                        if (Directory.GetFiles(d.FullName + "\\", "book.epub").Length != 0)
                         {
                             BookNumber += 1;
                             xmlInputData = File.ReadAllText(d.FullName + "\\" + "metadata.xml");
@@ -188,18 +204,27 @@ namespace Vita_Book_Edit
                     if (Bookindex > 99)
                     {
                     DLCIndex += 1;
-                    System.IO.Directory.CreateDirectory(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+                    System.IO.Directory.CreateDirectory(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
                     Bookindex = 2;
                     }
                     if (Bookindex < 10){bkindex = "0" + Bookindex.ToString();}
                     else{bkindex = Bookindex.ToString();}
                 
-                if (!Directory.Exists(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex)))
+                if (!Directory.Exists(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex)))
                     {
-                        System.IO.Directory.CreateDirectory(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
-                        AddBook mybook = new AddBook(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
+                        System.IO.Directory.CreateDirectory(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
+                        AddBook mybook = new AddBook(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
                         mybook.ShowDialog();
                         NewBook = true;
+                        DLCIndex = 1;
+                        BookNumber = 0;
+                        Bookindex = 2;
+                        flpCategories.Controls.Clear();
+                        allbooks.Clear();
+                        LibraryLocation = folderBrowserDialog1.SelectedPath;
+                        if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                        File.AppendAllText("settings.ini", LibraryLocation);
+                        libcheck();
                     }   
                     else
                     {
@@ -209,11 +234,11 @@ namespace Vita_Book_Edit
                 BookNumber = 0;
                 //Find the Number of Books (Count folders with book in them)
                 const string searchQuery = "*" + "book" + "*";
-                var directory = new DirectoryInfo(LibraryLocation + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
+                var directory = new DirectoryInfo(LibraryLocation + baseval1 + "\\" + baseval2 + "\\"  + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
                 var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
                 foreach (var d in directories)
                 {
-                    if (Directory.GetFiles(d.FullName + "\\", "metadata.xml").Length != 0) { BookNumber += 1; }
+                    if (Directory.GetFiles(d.FullName + "\\", "book.epub").Length != 0) { BookNumber += 1; }
                 }
 
                 LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
@@ -229,18 +254,27 @@ namespace Vita_Book_Edit
             foreach (var directory in Directory.GetDirectories(startLocation))
             {
                 CleanDirectory(directory);
-                if (Directory.GetFiles(directory).Length == 0 &&
+                if (Directory.GetFiles(directory,"book.epub").Length == 0 &&
                     Directory.GetDirectories(directory).Length == 0)
                 {
-                    Directory.Delete(directory, false);
+                    Directory.Delete(directory, true);
                 }
             }
         }
 
         private void cleanfolders_Click(object sender, EventArgs e)
         {
-            CleanDirectory(LibraryLocation + "\\" + ReaderTitle);
+            CleanDirectory(LibraryLocation + baseval1 + "\\" + "\\" + baseval2 + "\\" + "\\" + ReaderTitle);
             MessageBox.Show("Library Cleaned");
+            DLCIndex = 1;
+            BookNumber = 0;
+            Bookindex = 2;
+            flpCategories.Controls.Clear();
+            allbooks.Clear();
+            LibraryLocation = folderBrowserDialog1.SelectedPath;
+            if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                File.AppendAllText("settings.ini", LibraryLocation);
+            libcheck();
         }
 
         private void deleteBookToolStripMenuItem_Click(object sender, EventArgs e)

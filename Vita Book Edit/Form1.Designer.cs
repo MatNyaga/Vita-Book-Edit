@@ -57,7 +57,7 @@
             this.library.Name = "library";
             this.library.Size = new System.Drawing.Size(90, 68);
             this.library.TabIndex = 0;
-            this.library.Text = "reAddcont Folder Location";
+            this.library.Text = "ux0: Location (Memory Card)";
             this.library.UseVisualStyleBackColor = true;
             this.library.Click += new System.EventHandler(this.library_Click);
             // 
@@ -107,7 +107,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "ver 0.4";
+            this.label2.Text = "ver 0.5";
             // 
             // cleanfolders
             // 
