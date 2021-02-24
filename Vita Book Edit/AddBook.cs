@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using System.Linq;
 
 namespace Vita_Book_Edit
 {
@@ -28,6 +23,7 @@ namespace Vita_Book_Edit
         Boolean NewBack = true;
         Boolean NewSpine = true;
         Boolean SizeWarning = true;
+        string tempPath = string.Empty;
 
         public AddBook(String path)
         {
@@ -79,7 +75,7 @@ namespace Vita_Book_Edit
                 BackpictureBox.Load(BookPath + "\\" + "back.jpg");
                 NewBack = false;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 NewBack = false;
             }
@@ -90,9 +86,9 @@ namespace Vita_Book_Edit
                 SpinepictureBox.Load(BookPath + "\\" + "spine.jpg");
                 NewSpine = false;
             }
-            catch (Exception ex) 
-            { 
-                NewSpine = false; 
+            catch (Exception ex)
+            {
+                NewSpine = false;
             }
 
             selectEPUB.Enabled = false;
@@ -109,7 +105,7 @@ namespace Vita_Book_Edit
             FileStream fsIn = new FileStream(src, FileMode.Open);
             byte[] bt = new byte[1048756];
             int readybyte;
-            while((readybyte = fsIn.Read(bt,0,bt.Length)) > 0)
+            while ((readybyte = fsIn.Read(bt, 0, bt.Length)) > 0)
             {
                 fsOut.Write(bt, 0, readybyte);
                 worker.ReportProgress((int)(fsIn.Position * 100 / fsIn.Length));
@@ -144,7 +140,7 @@ namespace Vita_Book_Edit
                 SpinepictureBox.Image = Properties.Resources.spine;
                 BackpictureBox.Image = Properties.Resources.back;
             }
-            
+
 
         }
 
@@ -186,11 +182,19 @@ namespace Vita_Book_Edit
                 if (SpinepictureBox.Image != null)
                     SpinepictureBox.Image.Save(BookPath + "\\" + "spine.jpg", ImageFormat.Jpeg);
             }
+            
             if (EditMode)
                 MessageBox.Show("Book has been updated");
             else
                 MessageBox.Show("Book Added to Library");
             this.Close();
+        }
+
+        private void SetImageCover(string fileName)
+        {
+            Image img = Image.FromFile(fileName);
+            img = resizeImage(img, new Size(CoverBackSize));
+            CoverpictureBox.Image = img;
         }
 
         private void CoverpictureBox_Click(object sender, EventArgs e)
@@ -201,9 +205,7 @@ namespace Vita_Book_Edit
                 openFileDialog1.Filter = " JPEG files| *.jpg| PNG files | *.png| GIF Files | *.gif| TIFF Files | *.tif| BMP Files | *.bmp";
                 openFileDialog1.ShowDialog();
                 filename = openFileDialog1.FileName;
-                Image img = Image.FromFile(filename);
-                img = resizeImage(img, new Size(CoverBackSize));
-                CoverpictureBox.Image = img;
+                SetImageCover(filename);
                 filename = null;
                 NewCover = true;
             }
@@ -252,6 +254,18 @@ namespace Vita_Book_Edit
             openFileDialog1.Reset();
         }
 
+        private void ExtractTempCover(ZipArchive file)
+        {
+            tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(tempPath);
+            ZipArchiveEntry firstFile = file.Entries
+                .Where(f => f.FullName.Contains("Images"))
+                .OrderBy(f => f.Name).FirstOrDefault();
+            string firstImage = Path.Combine(tempPath, firstFile.Name);
+            firstFile.ExtractToFile(firstImage);
+            SetImageCover(firstImage);
+        }
+
         private void selectEPUB_Click(object sender, EventArgs e)
         {
 
@@ -262,12 +276,18 @@ namespace Vita_Book_Edit
             {
                 //EPUB compatibility check
                 EPUBfilename = openFileDialog1.FileName;
+                BookTitleText.Text = Path.GetFileNameWithoutExtension(EPUBfilename);
                 using (ZipArchive archive = ZipFile.Open(EPUBfilename, ZipArchiveMode.Read))
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
                         if (entry.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) || entry.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                         {
+                            if (ImageCounter == 0)
+                            {
+                                ExtractTempCover(archive);
+                            }
+
                             ImageCounter += 1;
                             if (SizeWarning && entry.Length > SizeLimit)
                             {
@@ -301,7 +321,7 @@ namespace Vita_Book_Edit
                 }
                 worker.RunWorkerAsync();
             }
-        EndWithoutCopy:;  
+        EndWithoutCopy:;
         }
 
         //Book model type selection
