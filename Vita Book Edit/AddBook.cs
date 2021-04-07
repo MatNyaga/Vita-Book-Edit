@@ -209,8 +209,6 @@ namespace Vita_Book_Edit
         private void button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
-
-            //booksToSave = new List<Book>();
             if (!MultiEdit) booksToSave.Add(bookCtrl);
 
             booksToSave.ForEach(b =>
@@ -244,13 +242,12 @@ namespace Vita_Book_Edit
                         worker.RunWorkerAsync();
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Books have been updated", "Books saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Close();
-                }
             });
-            
+            if (MultiEdit)
+            {
+                MessageBox.Show("Books have been updated", "Books saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close();
+            }
         }
         private void SetImageCover(string fileName)
         {
