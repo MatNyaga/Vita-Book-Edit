@@ -1,46 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Vita_Book_Edit.Entities;
 namespace Vita_Book_Edit
 {
     public partial class Form1 : Form
     {
-        String LibraryLocation = null;
-        String baseval1 = "book";
-        String baseval2 = "u";
-        String ReaderTitle = "PCSC80012";
-        String DLCBookTitleBase = "00000000BLKSTOK";
-        String PatchFolder = "reAddcont";
+        string LibraryLocation = null;
+        string baseval1 = "book";
+        string baseval2 = "u";
+        string ReaderTitle = "PCSC80012";
+        string DLCBookTitleBase = "00000000BLKSTOK";
+        string PatchFolder = "reAddcont";
         int DLCIndex = 1;
-        int BookNumber = 0;
-        int Bookindex = 2;
-        Boolean NewBook = false;
-        //XML Stream Data
         Serializer ser = new Serializer();
-        string path = string.Empty;
+        //string path = string.Empty;
         string xmlInputData = string.Empty;
-        string xmlOutputData = string.Empty;
-        List<book> allbooks = new List<book>();
+        //string xmlOutputData = string.Empty;
+        List<Book> allbooks = new List<Book>();
         int DeleteID;
-
-        private Button btnAdd = new Button();
-
+        List<DLC> DLCs = new List<DLC>();
         //Universal library format function
-        private void libcheck()
+        private void libcheck(bool showLast = false)
         {
-            int BookNumber = 0;
+            DLCs = new List<DLC>();
             try
             {
-                System.IO.Directory.CreateDirectory(LibraryLocation + PatchFolder + "\\" + ReaderTitle + "\\" + DLCBookTitleBase + DLCIndex);
-                System.IO.Directory.CreateDirectory(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\" + DLCBookTitleBase + DLCIndex);
+                if (!Directory.Exists(Path.Combine(LibraryLocation, PatchFolder, ReaderTitle, DLCBookTitleBase + DLCIndex)))
+                    Directory.CreateDirectory(Path.Combine(LibraryLocation, PatchFolder, ReaderTitle, DLCBookTitleBase + DLCIndex));
+                if (!Directory.Exists(Path.Combine(LibraryLocation, baseval1, baseval2, DLCBookTitleBase + DLCIndex)))
+                    Directory.CreateDirectory(Path.Combine(LibraryLocation, baseval1, baseval2, DLCBookTitleBase + DLCIndex));
             }
             catch (Exception ex)
             {
@@ -49,63 +42,98 @@ namespace Vita_Book_Edit
                 goto ErrorNoPath;
             }
             librarypathlabel.Text = LibraryLocation;
-
-            
-                //Find the Number of Books (Count folders with book in them)
-                const string searchQuery = "*" + "book" + "*";
-            for (int i = 0; i < 7; i++) {
-                if (Directory.Exists(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + i)){DLCIndex = i;
-                
-                    var directory = new DirectoryInfo(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex);
-                    var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
-                    foreach (var d in directories)
-                    {
-                        if (Directory.GetFiles(d.FullName + "\\", "book.epub").Length != 0)
-                        {
-                            BookNumber += 1;
-                            xmlInputData = File.ReadAllText(d.FullName + "\\" + "metadata.xml");
-                            book mybook = ser.Deserialize<book>(xmlInputData);
-                            Button btn = new Button();
-                            btn.Text = mybook.title+" - "+mybook.authors[0].author;
-                            mybook.bookpath = d.FullName;
-                            if (mybook.model == 0)
-                                btn.Size = new System.Drawing.Size(177, 250);
-                            else if (mybook.model == 1)
-                                btn.Size = new System.Drawing.Size(350, 250);
-                            btn.ForeColor = Color.BlueViolet;
-                            try
-                            {
-                                using (FileStream stream = new FileStream(d.FullName + "\\" + "cover.jpg", FileMode.Open, FileAccess.Read))
-                                {
-                                    btn.Image = Image.FromStream(stream);
-                                    stream.Dispose();
-                                    btn.Image = ResizeImage(btn.Image, btn.Size);
-                                }
-                            }
-                            catch (Exception ex) { }
-
-                            allbooks.Add(mybook);
-                            btn.Tag = allbooks.Count() - 1;
-                            flpCategories.Controls.Add(btn);
-                            this.Controls.Add(flpCategories);
-                            btn.Click += btn_Click;
-                            btn.MouseDown += new MouseEventHandler(this.btn_Click);
-                        }
-
-                }
-                }
-                else
-                {
-                    //return;
-                }
-            }
-            LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
+            //Get all DLLs
+            DLCs = Directory.GetDirectories(Path.Combine(LibraryLocation, baseval1, baseval2)).OrderBy(o => o)
+                .Select(d => new DLC { 
+                    RootPath = d, DLCName = Path.GetFileName(d), Index = Convert.ToInt32(Path.GetFileName(d).Replace(DLCBookTitleBase, string.Empty))
+                }).ToList();
+            DLCs.ForEach(b =>
+            {
+                string[] booksTmp = Directory.GetDirectories(b.RootPath);
+                b.Books = booksTmp.ToList()
+                    .Select(bk => {
+                        xmlInputData = File.Exists(Path.Combine(bk, "metadata.xml")) ? File.ReadAllText(Path.Combine(bk, "metadata.xml")) : string.Empty;
+                        Book mybook = string.IsNullOrEmpty(xmlInputData) ? new Book() : ser.Deserialize<Book>(xmlInputData);
+                        mybook.BookPath = bk;
+                        mybook.DLCIndex = b.Index;
+                        mybook.DLCPath = b.RootPath;
+                        mybook.FilePath = bk;
+                        mybook.FileExists = File.Exists(Path.Combine(bk, "book.epub"));
+                        mybook.Index = Convert.ToInt32(Path.GetFileName(bk).Replace(baseval1, string.Empty));
+                        return mybook;
+                    }).ToList();
+                b.DLCName = string.Concat(b.DLCName, " (", b.Books.Where(f => f.FileExists).ToList().Count().ToString(), ") books");
+                allbooks.AddRange(b.Books);
+            });
+            LibraryBookNumber.Text = "( " + (allbooks.Count().ToString()) + " Books )";
             cleanfolders.Enabled = true;
+            multiModMeta.Enabled = true;
             AddBook.Enabled = true;
             library.Text = "Change ux0:/ Folder Location";
-            ErrorNoPath:;
+            if (DLCs.Any())
+            {
+                cmbDLL.DataSource = DLCs;
+                cmbDLL.DisplayMember = "DLCName";
+                cmbDLL.ValueMember = "Index";
+                cmbDLL.SelectedIndex = showLast ? cmbDLL.Items.Count - 1 : 0;
+            }            
+        ErrorNoPath:;
         }
+        private void ShowBooks(DLC dLC)
+        {
+            List<Control> bookCovers = new List<Control>();
+            flpCategories.Controls.Clear();
+            dLC.Books.Where(b => b.FileExists).ToList().ForEach(b =>
+            {                
+                Button btn = new Button();
+                btn.Text = b.Title + " - " + b.Authors[0].Author;
+                if (b.Model == 0)
+                    btn.Size = new Size(177, 250);
+                else if (b.Model == 1)
+                    btn.Size = new Size(350, 250);
+                btn.ForeColor = Color.BlueViolet;
+                try
+                {
+                    using (FileStream stream = new FileStream(Path.Combine(b.FilePath, "cover.jpg"), FileMode.Open, FileAccess.Read))
+                    {
+                        btn.Image = Image.FromStream(stream);
+                        stream.Dispose();
+                        btn.Image = ResizeImage(btn.Image, btn.Size);
+                    }
+                }
+                catch { }
+                btn.Tag = b.Index;
 
+                CheckBox chb = new CheckBox();
+                chb.Parent = btn;
+                chb.Size = new Size(15, 14);
+                chb.Location = new Point(5, (btn.Height - chb.Height) - 3);
+                chb.TextAlign = ContentAlignment.MiddleLeft;
+                chb.TextAlign = ContentAlignment.MiddleRight;
+                chb.Tag = b.Index;
+                chb.CheckedChanged += chb_CheckedChanged;
+
+                bookCovers.Add(btn);
+                btn.Click += btn_Click;
+                btn.MouseDown += new MouseEventHandler(this.btn_Click);
+            });
+            flpCategories.Controls.AddRange(bookCovers.ToArray());
+            this.Controls.Add(flpCategories);
+        }
+        void chb_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                CheckBox b = (CheckBox)sender;
+                DLCs.Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                    .FirstOrDefault().Books.Where(bk => bk.Index == (int)b.Tag)
+                        .ToList().ForEach(bk =>
+                        {
+                            bk.Selected = b.Checked;
+                        });
+            }
+            catch { }            
+        }
         void btn_Click(object sender, MouseEventArgs e)
         {
             try
@@ -121,28 +149,25 @@ namespace Vita_Book_Edit
                         }
                         break;
                 }
-
             }
             catch { }
         }
-
         void btn_Click(object sender, EventArgs e)
         {
             try
             {
                 Button b = (Button)sender;
-                int ListID = (int)b.Tag;
-                MessageBox.Show(allbooks[ListID].title);
+                MessageBox.Show(
+                    DLCs.Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index).FirstOrDefault().Books.Where(bk => bk.Index == (int)b.Tag).FirstOrDefault().Title
+                );
             }
             catch { }
         }
-
         private static Image ResizeImage(Image image, Size size)
         {
             Image img = new Bitmap(image, size);
             return img;
         }
-
         public Form1()
         {
             InitializeComponent();
@@ -153,39 +178,79 @@ namespace Vita_Book_Edit
                 libcheck();
             }
         }
-
         private void library_Click(object sender, EventArgs e)
         {
             DialogResult result = folderBrowserDialog1.ShowDialog();
-            //Checks patch folder
-            if (Directory.Exists(LibraryLocation + PatchFolder + "\\" + ReaderTitle))
-            {
-                MessageBox.Show(this, "Please ensure you DELETE the contents in: " + Environment.NewLine +
-                    Environment.NewLine +
-                    LibraryLocation + PatchFolder + "\\" + ReaderTitle + Environment.NewLine +
-                    Environment.NewLine +
-                    "or MOVE them to " + Environment.NewLine +
-                    Environment.NewLine +
-                    LibraryLocation +  baseval1 + "\\" + baseval2 + "\\" + Environment.NewLine +
-                    Environment.NewLine +
-                    "for the Library to be recognized in the Vita", "PLEASE NOTE!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //Checks patch folder            
             if (result == DialogResult.OK)
             {
                 DLCIndex = 1;
-                BookNumber = 0;
-                Bookindex = 2;
                 flpCategories.Controls.Clear();
                 allbooks.Clear();
                 LibraryLocation = folderBrowserDialog1.SelectedPath;
-                if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                if (string.IsNullOrEmpty(File.ReadLines("settings.ini").ElementAtOrDefault(0)))
                     File.AppendAllText("settings.ini", LibraryLocation);
-                libcheck();
-                
+                if (Directory.Exists(Path.Combine(LibraryLocation, PatchFolder, ReaderTitle)))
+                {
+                    MessageBox.Show(this, "Please ensure you DELETE the contents in: " + Environment.NewLine +
+                        Environment.NewLine +
+                        Path.Combine(LibraryLocation, PatchFolder, ReaderTitle) + Environment.NewLine +
+                        Environment.NewLine +
+                        "or MOVE them to " + Environment.NewLine +
+                        Environment.NewLine +
+                        Path.Combine(LibraryLocation, baseval1, baseval2) + Environment.NewLine +
+                        Environment.NewLine +
+                        "for the Library to be recognized in the Vita", "PLEASE NOTE!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                libcheck();                
             }
-
         }
-
+        private Book CheckNewBookEntry()
+        {
+            DLC dlcSaveTo = null;
+            Book NewBook = null;
+            try
+            {
+                string basePath = Path.Combine(LibraryLocation, baseval1, baseval2);
+                if (DLCs.Any())
+                {
+                    Book[] emptyBooks = DLCs.SelectMany(o => 
+                        o.Books.Where(b => !b.FileExists).Select(i => i)).ToArray();
+                    if (emptyBooks.Any())
+                        NewBook = emptyBooks.FirstOrDefault();
+                    else
+                    {
+                        dlcSaveTo = DLCs.OrderByDescending(d => d.RootPath).FirstOrDefault();
+                        int maxBookIndex = dlcSaveTo.Books.Any() ? dlcSaveTo.Books.Max(m => m.Index) : 0;
+                        if (dlcSaveTo.Index == 7 && maxBookIndex == 7)
+                        {
+                            MessageBox.Show("Reader Book Limit has been reached!");
+                            return null;
+                        }
+                        if (maxBookIndex == 99)
+                        {
+                            int newDLCIndex = dlcSaveTo.Index + 1;
+                            dlcSaveTo = new DLC {
+                                Index = newDLCIndex,
+                                RootPath = Path.Combine(Path.GetDirectoryName(dlcSaveTo.RootPath), string.Concat(DLCBookTitleBase, newDLCIndex.ToString())),
+                                Books = new List<Book>()
+                            };
+                            NewBook = new Book { Index = 1, DLCPath = dlcSaveTo.RootPath, DLCIndex = dlcSaveTo.Index };
+                        } else
+                        {
+                            if (dlcSaveTo.Index == 1 && maxBookIndex == 0) maxBookIndex = 1;
+                            NewBook = new Book { Index = maxBookIndex + 1, DLCPath = dlcSaveTo.RootPath, DLCIndex = dlcSaveTo.Index };
+                        }
+                    }
+                }
+                return NewBook;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
         private void AddBook_Click(object sender, EventArgs e)
         {
             if (librarypathlabel.Text == "\\")
@@ -193,64 +258,27 @@ namespace Vita_Book_Edit
                 MessageBox.Show("Please select the Vita root directory (ux0:).");
                 return;
             }
-            Bookindex = 2;
-            string bkindex = null;
-                while (!NewBook)
-                {
-                    if (DLCIndex > 6)
-                    {
-                        MessageBox.Show("Reader Book Limit has been reached!");
-                        NewBook = true;
-                        return;
-                    }
-                    if (Bookindex > 99)
-                    {
-                    DLCIndex += 1;
-                    System.IO.Directory.CreateDirectory(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex);
-                    Bookindex = 2;
-                    }
-                    if (Bookindex < 10){bkindex = "0" + Bookindex.ToString();}
-                    else{bkindex = Bookindex.ToString();}
-                
-                if (!Directory.Exists(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex)))
-                    {
-                        System.IO.Directory.CreateDirectory(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
-                        AddBook mybook = new AddBook(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex + "\\" + ("book" + bkindex));
-                        mybook.ShowDialog();
-                        NewBook = true;
-                        DLCIndex = 1;
-                        BookNumber = 0;
-                        Bookindex = 2;
-                        flpCategories.Controls.Clear();
-                        allbooks.Clear();
-                        LibraryLocation = folderBrowserDialog1.SelectedPath;
-                        if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
-                        File.AppendAllText("settings.ini", LibraryLocation);
-                        libcheck();
-                    }   
-                    else
-                    {
-                        Bookindex += 1;
-                    }
-                }
-                BookNumber = 0;
-                //Find the Number of Books (Count folders with book in them)
-                const string searchQuery = "*" + "book" + "*";
-                var directory = new DirectoryInfo(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex);
-                var directories = directory.GetDirectories(searchQuery, SearchOption.AllDirectories);
-                foreach (var d in directories)
-                {
-                    if (Directory.GetFiles(d.FullName + "\\", "book.epub").Length != 0) { BookNumber += 1; }
-                }
-
-                LibraryBookNumber.Text = "( " + (BookNumber) + " Books )";
-                NewBook = false;
+            Book newBook = CheckNewBookEntry();
+            if (newBook != null)
+            {
+                AddBook mybook = new AddBook(
+                    Path.Combine(
+                        LibraryLocation, baseval1, baseval2, DLCBookTitleBase + newBook.DLCIndex.ToString(), "book" + newBook.Index.ToString().PadLeft(2, '0')
+                    )
+                );
+                mybook.ShowDialog();
+                DLCIndex = 1;
+                flpCategories.Controls.Clear();
+                allbooks.Clear();
+                LibraryLocation = folderBrowserDialog1.SelectedPath;
+                if (File.ReadLines("settings.ini").ElementAtOrDefault(0) == null)
+                    File.AppendAllText("settings.ini", LibraryLocation);
+                libcheck(true);
+            }
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-
         private static void CleanDirectory(string startLocation)
         {
             foreach (var directory in Directory.GetDirectories(startLocation))
@@ -261,17 +289,13 @@ namespace Vita_Book_Edit
                 {
                     Directory.Delete(directory, true);
                 }
-
             }
         }
-
         private void cleanfolders_Click(object sender, EventArgs e)
         {
             CleanDirectory(LibraryLocation +  baseval1 + "\\" + baseval2 + "\\"  + DLCBookTitleBase + DLCIndex);
             MessageBox.Show("Library Cleaned");
             DLCIndex = 1;
-            BookNumber = 0;
-            Bookindex = 2;
             flpCategories.Controls.Clear();
             allbooks.Clear();
             LibraryLocation = folderBrowserDialog1.SelectedPath;
@@ -279,14 +303,21 @@ namespace Vita_Book_Edit
                 File.AppendAllText("settings.ini", LibraryLocation);
             libcheck();
         }
-
         private void deleteBookToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Book selBook = DLCs
+                .Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                .FirstOrDefault().Books
+                    .Where(bk => bk.Index == DeleteID)
+                    .FirstOrDefault();
 
-            DialogResult result = MessageBox.Show("Are you sure you want to Delete this book?", "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            DialogResult result = MessageBox.Show(
+                "Are you sure you want to Delete this book? " 
+                    + selBook.Title, 
+                "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (result.Equals(DialogResult.OK))
             {
-                System.IO.DirectoryInfo di = new DirectoryInfo(allbooks[DeleteID].bookpath);
+                System.IO.DirectoryInfo di = new DirectoryInfo(selBook.BookPath);
 
                 foreach (FileInfo file in di.GetFiles())
                 {
@@ -305,34 +336,46 @@ namespace Vita_Book_Edit
             {
                 DeleteID = 0;
                 return;
-            }
-            
+            }            
             DeleteID = 0;
         }
-
         private void bookDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Book selBook = DLCs
+                .Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                .FirstOrDefault().Books
+                    .Where(bk => bk.Index == DeleteID)
+                    .FirstOrDefault();
             MessageBox.Show("Book Path:"+Environment.NewLine +
-                allbooks[DeleteID].bookpath +Environment.NewLine + Environment.NewLine+
-                "Author: "+ allbooks[DeleteID].authors[0].author + Environment.NewLine+
-                "Series Name: " + allbooks[DeleteID].seriesName + Environment.NewLine+
-                "Volume No: " + allbooks[DeleteID].seriesOrdinal + Environment.NewLine+
-                "Title: " + allbooks[DeleteID].title + Environment.NewLine+
-                "Publisher: " + allbooks[DeleteID].publisher + Environment.NewLine+
-                "Description: " + allbooks[DeleteID].description + Environment.NewLine);
+                selBook.BookPath +Environment.NewLine + Environment.NewLine+
+                "Author: "+ selBook.Authors[0].Author + Environment.NewLine+
+                "Series Name: " + selBook.SeriesName + Environment.NewLine+
+                "Volume No: " + selBook.SeriesOrdinal + Environment.NewLine+
+                "Title: " + selBook.Title + Environment.NewLine+
+                "Publisher: " + selBook.Publisher + Environment.NewLine+
+                "Description: " + selBook.Description + Environment.NewLine);
         }
-
         private void editBookDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddBook mybook = new AddBook(allbooks[DeleteID]);
+            Book selBook = DLCs
+                .Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                .FirstOrDefault().Books
+                    .Where(bk => bk.Index == DeleteID)
+                    .FirstOrDefault();
+            AddBook mybook = new AddBook(selBook);
             mybook.ShowDialog();
+            selBook = mybook.bookCtrl;
+            DLCs.Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                .FirstOrDefault().Books
+                    .Where(bk => bk.Index == DeleteID)
+                        .ToList().ForEach(b =>
+                        {
+                            b = selBook;
+                        });
         }
-
         private void refresh_Click(object sender, EventArgs e)
         {
             DLCIndex = 1;
-            BookNumber = 0;
-            Bookindex = 2;
             flpCategories.Controls.Clear();
             allbooks.Clear();
             LibraryLocation = folderBrowserDialog1.SelectedPath;
@@ -340,39 +383,32 @@ namespace Vita_Book_Edit
                 File.AppendAllText("settings.ini", LibraryLocation);
             libcheck();
         }
-
         private void searchTxt_TextChanged(object sender, EventArgs e)
         {
-            if (searchTxt.Text == "")
-            {
-                foreach (Button c in flpCategories.Controls.OfType<Button>())
-                {
-                    c.BackColor = Color.White;
-                    c.Visible = true;
+            flpCategories.Controls.OfType<Button>().ToList().ForEach(c => { 
+                c.Visible = string.IsNullOrEmpty(searchTxt.Text) || c.Text.ToLower().Contains(searchTxt.Text.ToLower());
+                c.BackColor = !string.IsNullOrEmpty(searchTxt.Text) && c.Visible ? Color.Yellow : Color.White;
+            });
+        }
+        private void cmbDLL_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbDLL.SelectedIndex != -1)
+                ShowBooks((DLC)cmbDLL.SelectedItem);
+        }
 
-                }
-                return;
-            }
-            foreach (Button c in flpCategories.Controls)
+        private void multiModMeta_Click(object sender, EventArgs e)
+        {
+            var selectedBooks = DLCs
+                .Where(d => d.Index == ((DLC)cmbDLL.SelectedItem).Index)
+                .FirstOrDefault().Books
+                    .Where(bk => bk.Selected).ToList();
+            if (selectedBooks.Any())
             {
-                try
-                {
-                    if (c.Text.ToLower().Contains(searchTxt.Text.ToLower()))
-                    {
-                        c.BackColor = Color.Yellow;
-                        c.Visible = true;
-                    }
-                    else
-                    {
-                        c.Visible = false;
-                    }
-                    if (!c.Text.ToLower().Contains(searchTxt.Text.ToLower()))
-                    {
-                        c.BackColor = Color.White;
-                    }
-                }
-                catch (Exception ex) { }
-
+                AddBook mybook = new AddBook(selectedBooks);
+                mybook.ShowDialog();
+            } else
+            {
+                MessageBox.Show("Select one ore more books to continue.");
             }
         }
     }
