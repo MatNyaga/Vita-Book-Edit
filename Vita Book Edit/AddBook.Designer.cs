@@ -66,10 +66,12 @@
             this.label15 = new System.Windows.Forms.Label();
             this.ModelType = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CoverpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackpictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpinepictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -395,11 +397,24 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Location = new System.Drawing.Point(3, 27);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(369, 566);
             this.groupBox2.TabIndex = 36;
             this.groupBox2.TabStop = false;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(86, 534);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(109, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Delete original file";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // AddBook
             // 
@@ -449,6 +464,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.SpinepictureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -493,5 +510,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox ModelType;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

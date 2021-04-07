@@ -48,6 +48,8 @@
             this.deleteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refresh = new System.Windows.Forms.Button();
             this.searchTxt = new System.Windows.Forms.TextBox();
+            this.cmbDLL = new System.Windows.Forms.ComboBox();
+            this.multiModMeta = new System.Windows.Forms.Button();
             this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +57,7 @@
             // 
             this.library.Location = new System.Drawing.Point(39, 23);
             this.library.Name = "library";
-            this.library.Size = new System.Drawing.Size(90, 68);
+            this.library.Size = new System.Drawing.Size(90, 61);
             this.library.TabIndex = 0;
             this.library.Text = "ux0: Location (Memory Card)";
             this.library.UseVisualStyleBackColor = true;
@@ -65,7 +67,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(381, 60);
+            this.label1.Location = new System.Drawing.Point(381, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 13);
             this.label1.TabIndex = 1;
@@ -74,9 +76,9 @@
             // AddBook
             // 
             this.AddBook.Enabled = false;
-            this.AddBook.Location = new System.Drawing.Point(39, 113);
+            this.AddBook.Location = new System.Drawing.Point(39, 99);
             this.AddBook.Name = "AddBook";
-            this.AddBook.Size = new System.Drawing.Size(90, 65);
+            this.AddBook.Size = new System.Drawing.Size(90, 58);
             this.AddBook.TabIndex = 2;
             this.AddBook.Text = "+ (Add Book)";
             this.AddBook.UseVisualStyleBackColor = true;
@@ -94,7 +96,7 @@
             // LibraryBookNumber
             // 
             this.LibraryBookNumber.AutoSize = true;
-            this.LibraryBookNumber.Location = new System.Drawing.Point(511, 60);
+            this.LibraryBookNumber.Location = new System.Drawing.Point(441, 62);
             this.LibraryBookNumber.Name = "LibraryBookNumber";
             this.LibraryBookNumber.Size = new System.Drawing.Size(58, 13);
             this.LibraryBookNumber.TabIndex = 4;
@@ -112,9 +114,9 @@
             // cleanfolders
             // 
             this.cleanfolders.Enabled = false;
-            this.cleanfolders.Location = new System.Drawing.Point(39, 200);
+            this.cleanfolders.Location = new System.Drawing.Point(39, 176);
             this.cleanfolders.Name = "cleanfolders";
-            this.cleanfolders.Size = new System.Drawing.Size(90, 65);
+            this.cleanfolders.Size = new System.Drawing.Size(90, 58);
             this.cleanfolders.TabIndex = 6;
             this.cleanfolders.Text = "Clean Empty Folders";
             this.cleanfolders.UseVisualStyleBackColor = true;
@@ -129,7 +131,7 @@
             this.flpCategories.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.flpCategories.Location = new System.Drawing.Point(160, 86);
             this.flpCategories.Name = "flpCategories";
-            this.flpCategories.Size = new System.Drawing.Size(628, 339);
+            this.flpCategories.Size = new System.Drawing.Size(797, 339);
             this.flpCategories.TabIndex = 7;
             // 
             // label3
@@ -207,15 +209,38 @@
             // 
             this.searchTxt.Location = new System.Drawing.Point(160, 60);
             this.searchTxt.Name = "searchTxt";
-            this.searchTxt.Size = new System.Drawing.Size(213, 20);
+            this.searchTxt.Size = new System.Drawing.Size(199, 20);
             this.searchTxt.TabIndex = 13;
             this.searchTxt.TextChanged += new System.EventHandler(this.searchTxt_TextChanged);
+            // 
+            // cmbDLL
+            // 
+            this.cmbDLL.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDLL.FormattingEnabled = true;
+            this.cmbDLL.Location = new System.Drawing.Point(536, 57);
+            this.cmbDLL.Name = "cmbDLL";
+            this.cmbDLL.Size = new System.Drawing.Size(252, 21);
+            this.cmbDLL.TabIndex = 14;
+            this.cmbDLL.SelectedIndexChanged += new System.EventHandler(this.cmbDLL_SelectedIndexChanged);
+            // 
+            // multiModMeta
+            // 
+            this.multiModMeta.Enabled = false;
+            this.multiModMeta.Location = new System.Drawing.Point(39, 255);
+            this.multiModMeta.Name = "multiModMeta";
+            this.multiModMeta.Size = new System.Drawing.Size(90, 58);
+            this.multiModMeta.TabIndex = 15;
+            this.multiModMeta.Text = "Modify multiple metadata";
+            this.multiModMeta.UseVisualStyleBackColor = true;
+            this.multiModMeta.Click += new System.EventHandler(this.multiModMeta_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(969, 450);
+            this.Controls.Add(this.multiModMeta);
+            this.Controls.Add(this.cmbDLL);
             this.Controls.Add(this.searchTxt);
             this.Controls.Add(this.refresh);
             this.Controls.Add(this.label5);
@@ -261,6 +286,8 @@
         private System.Windows.Forms.ToolStripMenuItem editBookDetailsToolStripMenuItem;
         private System.Windows.Forms.Button refresh;
         private System.Windows.Forms.TextBox searchTxt;
+        private System.Windows.Forms.ComboBox cmbDLL;
+        private System.Windows.Forms.Button multiModMeta;
     }
 }
 
