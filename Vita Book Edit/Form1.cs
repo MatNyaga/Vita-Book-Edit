@@ -18,9 +18,7 @@ namespace Vita_Book_Edit
         string PatchFolder = "reAddcont";
         int DLCIndex = 1;
         Serializer ser = new Serializer();
-        //string path = string.Empty;
         string xmlInputData = string.Empty;
-        //string xmlOutputData = string.Empty;
         List<Book> allbooks = new List<Book>();
         int DeleteID;
         List<DLC> DLCs = new List<DLC>();
@@ -49,7 +47,7 @@ namespace Vita_Book_Edit
                 }).ToList();
             DLCs.ForEach(b =>
             {
-                string[] booksTmp = Directory.GetDirectories(b.RootPath);
+                string[] booksTmp = Directory.GetDirectories(b.RootPath).OrderBy(o => o).ToArray();
                 b.Books = booksTmp.ToList()
                     .Select(bk => {
                         xmlInputData = File.Exists(Path.Combine(bk, "metadata.xml")) ? File.ReadAllText(Path.Combine(bk, "metadata.xml")) : string.Empty;
@@ -409,6 +407,16 @@ namespace Vita_Book_Edit
             } else
             {
                 MessageBox.Show("Select one ore more books to continue.");
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (var d in flpCategories.Controls)
+            {
+                Button b = (Button)d;
+                CheckBox c = (CheckBox)b.GetChildAtPoint(new Point(5, (b.Height - 14) - 3));
+                c.Checked = checkBox1.Checked;
             }
         }
     }
